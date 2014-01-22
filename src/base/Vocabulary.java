@@ -1,9 +1,12 @@
 package base;
 
 public class Vocabulary {
-	private String symbol;
+	private String vocabulario;
 	
 	Vocabulary (String v){
-		symbol=v;
+		vocabulario=v;
+	}
+	public String toString(){
+		return vocabulario;
 	}
 }
