@@ -5,4 +5,4 @@
  * @author Aitor
  *
  */
-package Practica1;
+package practica1;
