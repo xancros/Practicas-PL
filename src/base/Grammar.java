@@ -21,12 +21,14 @@ public class Grammar {
 	
 	public String toString(){
 		System.out.print("Simbolos no terminales\n");
-		Iterator<NonTerminals> itNT = vn.iterator();
+		//Iterator<NonTerminals> itNT = vn.iterator();
 		System.out.print("{");
-		while(itNT.hasNext()){
-			System.out.print(itNT.next().toString());
-			if(itNT.hasNext())
-				System.out.print(",");
+		for (NonTerminals itNT: vn){
+			System.out.print(itNT.toString());
+		//while(itNT.hasNext()){
+			//System.out.print(itNT.next().toString());
+			//if(itNT.hasNext())
+				//System.out.print(",");
 		}
 		System.out.print("}\n");
 		

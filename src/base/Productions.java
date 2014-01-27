@@ -15,10 +15,12 @@ public class Productions {
 	}
 	
 	public String toString(){
-		Iterator<Vocabulary> it = consecuente.iterator();
+		//Iterator<Vocabulary> it = consecuente.iterator();
 		String c = new String();
-		while (it.hasNext()){
-			c=(c+(it.next().toString()));
+		//while (it.hasNext()){
+		for (Vocabulary vo: consecuente){
+		//	c=(c+(it.next().toString()));
+			c=(c+vo.toString());
 		}
 		return new String(antecedente.toString()+"->"+c);
 	}
