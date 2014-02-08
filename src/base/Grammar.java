@@ -20,51 +20,34 @@ public class Grammar {
 	}
 	
 	public String toString(){
-		System.out.print("Simbolos no terminales\n");
-		//Iterator<NonTerminals> itNT = vn.iterator();
-		System.out.print("{");
-		for (NonTerminals itNT: vn){
-			System.out.print(itNT.toString());
-		//while(itNT.hasNext()){
-			//System.out.print(itNT.next().toString());
-			//if(itNT.hasNext())
-				//System.out.print(",");
+		String s = new String();
+
+		s += "Simbolos no terminales\n";
+
+		s += ("(");
+		for (NonTerminals itNT : vn) {
+
+			s += (itNT.toString() + ",");
 		}
-		System.out.print("}\n");
-		
-		System.out.print("\nSimbolos terminales\n");
-		Iterator<Terminals> itT = vt.iterator();
-		System.out.print("{");
-		while(itT.hasNext()){
-			System.out.print(itT.next().toString());
-			if(itT.hasNext())
-				System.out.print(",");
+		s += ("}\n");
+
+		s += ("\nSimbolos terminales\n");
+
+		s += ("(");
+		for (Terminals itT : vt) {
+			s += (itT.toString() + ",");
+
 		}
-		System.out.print("}\n");
-		System.out.print("\nProducciones\n");
-		Iterator<Productions> itP = p.iterator();
-		while(itP.hasNext()){
-			System.out.println(itP.next().toString());
+
+		s += ("}\n");
+
+		s += ("\nProducciones\n");
+
+		for (Productions itP : p) {
+			s += (itP.toString() + "\n");
 		}
-		/*String objeto = new String();
-		objeto.concat("Simbolos no terminales\n");
-		Iterator<NonTerminals> itNT = vn.iterator();
-		while(itNT.hasNext()){
-			objeto.concat(itNT.next().toString()+"\n");
-		}
-		objeto.concat("Simbolos Terminales\n");
-		Iterator<Terminals> itT = vt.iterator();
-		while(itT.hasNext()){
-			objeto.concat(itT.next().toString()+"\n");
-		}
-		objeto.concat("Producciones\n");
-		Iterator<Productions> itP = p.iterator();
-		while(itP.hasNext()){
-			objeto.concat(itP.toString()+"\n");
-		}
-		objeto.concat("Simbolo inicial\n"+s.toString());
-		return objeto;*/
-		return "";
+
+		return s;
 	}
-	
+
 }

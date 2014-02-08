@@ -531,7 +531,7 @@ class Yylex {
           }
         case 5: break;
         case 3: 
-          { System.out.println("He reconocido un correo y es: "+yytext());
+          { System.out.println(yytext());
           }
         case 6: break;
         default: 
