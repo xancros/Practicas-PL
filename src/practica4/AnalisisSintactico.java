@@ -4,22 +4,23 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Stack;
 
+import excepciones.ErrorSintactico;
 import base.*;
 public class AnalisisSintactico {
 
 	private Grammar g;
 	private Stack<Vocabulary> entrada;
-	private Stack<Vocabulary> lectura;
+	private Stack<Vocabulary> inicio;
 	
 	private AnalisisSintactico(){
 		entrada=new Stack<Vocabulary>();
-		lectura=new Stack<Vocabulary>();
+		inicio=new Stack<Vocabulary>();
 		generarGramatica();
 	}
 	public AnalisisSintactico(String input){
 		this();
 		entrada.add(new Vocabulary(input));
-		lectura.add(g.getS());
+		inicio.add(g.getS());
 	}
 	private void generarGramatica(){
 		NonTerminals E = new NonTerminals("E");
@@ -62,9 +63,17 @@ public class AnalisisSintactico {
 		Grammar g = new Grammar(nt,t,p,S);
 	}
 	
-	private boolean analizar(){
-		while(!entrada.isEmpty() && !lectura.isEmpty()){
-			
+	private boolean analizar() throws ErrorSintactico{
+		while(!entrada.isEmpty() && !inicio.isEmpty()){
+			if(inicio.peek() instanceof NonTerminals || firstElementIsNonTerminal()){
+				derivar();
+			}
+			if(primerElementoIgual()){
+				casar();
+			}else{
+				//lanzar excepcion
+				throw new excepciones.ErrorSintactico();
+			}
 		}
 		return false;
 	}
@@ -76,8 +85,12 @@ public class AnalisisSintactico {
 		
 	}
 	
-	
-	
+	private boolean primerElementoIgual(){
+			return (inicio.peek().getVocabulario().toCharArray()[0])==(entrada.peek().getVocabulario().toCharArray()[0]); 
+	}
+	private boolean firstElementIsNonTerminal(){
+		return g.getVn().contains(inicio.peek().getVocabulario().toCharArray()[0]);
+	}
 	
 	
 	/**

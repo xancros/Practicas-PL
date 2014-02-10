@@ -29,7 +29,15 @@ public class Productions {
 	public void setConsecuente(Collection<Vocabulary> consecuente) {
 		this.consecuente = consecuente;
 	}
-
+	public Vocabulary getFirstElement(){
+		Vocabulary e=null;
+		for(Vocabulary element : consecuente)
+		{
+			e=element;
+			break;
+		}
+		return e;
+	}
 	public String toString(){
 		//Iterator<Vocabulary> it = consecuente.iterator();
 		String c = new String();
