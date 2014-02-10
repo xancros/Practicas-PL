@@ -68,7 +68,13 @@ public class AnalisisSintactico {
 		}
 		return false;
 	}
-	
+	private void derivar(){
+		//TO-DO
+	}
+	private void casar(){
+		//TO-DO
+		
+	}
 	
 	
 	

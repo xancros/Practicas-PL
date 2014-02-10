@@ -14,6 +14,22 @@ public class Productions {
 		consecuente=con;
 	}
 	
+	public NonTerminals getAntecedente() {
+		return antecedente;
+	}
+
+	public void setAntecedente(NonTerminals antecedente) {
+		this.antecedente = antecedente;
+	}
+
+	public Collection<Vocabulary> getConsecuente() {
+		return consecuente;
+	}
+
+	public void setConsecuente(Collection<Vocabulary> consecuente) {
+		this.consecuente = consecuente;
+	}
+
 	public String toString(){
 		//Iterator<Vocabulary> it = consecuente.iterator();
 		String c = new String();
