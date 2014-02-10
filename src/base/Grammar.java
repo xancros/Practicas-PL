@@ -19,27 +19,59 @@ public class Grammar {
 		this.s = s;
 	}
 	
+	public Collection<NonTerminals> getVn() {
+		return vn;
+	}
+
+	public void setVn(Collection<NonTerminals> vn) {
+		this.vn = vn;
+	}
+
+	public Collection<Terminals> getVt() {
+		return vt;
+	}
+
+	public void setVt(Collection<Terminals> vt) {
+		this.vt = vt;
+	}
+
+	public Collection<Productions> getP() {
+		return p;
+	}
+
+	public void setP(Collection<Productions> p) {
+		this.p = p;
+	}
+
+	public NonTerminals getS() {
+		return s;
+	}
+
+	public void setS(NonTerminals s) {
+		this.s = s;
+	}
+
 	public String toString(){
 		String s = new String();
 
 		s += "Simbolos no terminales\n";
 
-		s += ("(");
+		s += ("( ");
 		for (NonTerminals itNT : vn) {
 
-			s += (itNT.toString() + ",");
+			s += (itNT.toString());
 		}
-		s += ("}\n");
+		s += (" }\n");
 
 		s += ("\nSimbolos terminales\n");
 
-		s += ("(");
+		s += ("( ");
 		for (Terminals itT : vt) {
-			s += (itT.toString() + ",");
+			s += (itT.toString());
 
 		}
 
-		s += ("}\n");
+		s += (" }\n");
 
 		s += ("\nProducciones\n");
 

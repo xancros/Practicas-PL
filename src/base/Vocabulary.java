@@ -3,7 +3,7 @@ package base;
 public class Vocabulary {
 	private String vocabulario;
 	
-	Vocabulary (String v){
+	public Vocabulary (String v){
 		vocabulario=v;
 	}
 	public String toString(){
