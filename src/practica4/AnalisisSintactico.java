@@ -75,21 +75,24 @@ public class AnalisisSintactico {
 				throw new excepciones.ErrorSintactico();
 			}
 		}
-		return false;
+		return entrada.isEmpty() && inicio.isEmpty();
 	}
 	private void derivar(){
 		//TO-DO
 	}
 	private void casar(){
 		//TO-DO
-		
+		Vocabulary in = inicio.pop();
+		Vocabulary en = entrada.pop();
+		//in.getVocabulario().substring(1,X);
+		//en.getVocabulario().substring(1,X);
 	}
 	
 	private boolean primerElementoIgual(){
-			return (inicio.peek().getVocabulario().toCharArray()[0])==(entrada.peek().getVocabulario().toCharArray()[0]); 
+			return (inicio.peek().getVocabulario().charAt(0))==(entrada.peek().getVocabulario().charAt(0)); 
 	}
 	private boolean firstElementIsNonTerminal(){
-		return g.getVn().contains(inicio.peek().getVocabulario().toCharArray()[0]);
+		return g.getVn().contains(inicio.peek().getVocabulario().charAt(0));
 	}
 	
 	
