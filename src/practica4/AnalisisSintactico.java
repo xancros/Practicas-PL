@@ -13,20 +13,20 @@ public class AnalisisSintactico {
 	private Stack<Vocabulary> inicio;
 	
 	private AnalisisSintactico(){
-		entrada=new Stack<Vocabulary>();
 		inicio=new Stack<Vocabulary>();
 		generarGramatica();
 	}
-	public AnalisisSintactico(String input){
+	public AnalisisSintactico(Stack<Vocabulary> input) throws ErrorSintactico{
 		this();
-		entrada.add(new Vocabulary(input));
+		entrada=input;
 		inicio.add(g.getS());
+		analizar();
 	}
 	private void generarGramatica(){
 		NonTerminals E = new NonTerminals("E");
 		NonTerminals T = new NonTerminals("T");
 		NonTerminals F = new NonTerminals("F");
-		NonTerminals S = new NonTerminals("S");
+		NonTerminals S = new NonTerminals("E");
 		
 		Terminals mas = new Terminals("+");
 		Terminals por = new Terminals("*");
@@ -45,6 +45,11 @@ public class AnalisisSintactico {
 		cp2.add(T);
 		Productions p2 = new Productions("E",cp2);
 		
+		Collection<Vocabulary> cp3 = new LinkedList<Vocabulary>();
+		
+		cp3.add(i);
+		Productions p3 = new Productions("E",cp3);
+		
 		Collection<NonTerminals> nt = new HashSet<NonTerminals>();
 		nt.add(E);
 		nt.add(T);
@@ -59,8 +64,10 @@ public class AnalisisSintactico {
 		Collection<Productions> p = new HashSet<Productions>();
 		p.add(p1);
 		p.add(p2);
+		p.add(p3);
 		//System.out.println(p.toString());
-		Grammar g = new Grammar(nt,t,p,S);
+		g = new Grammar(nt,t,p,S);
+		//System.out.println(g.getS().getVocabulario());
 	}
 	
 	private boolean analizar() throws ErrorSintactico{
@@ -74,34 +81,46 @@ public class AnalisisSintactico {
 				//lanzar excepcion
 				throw new excepciones.ErrorSintactico();
 			}
+			
 		}
 		return entrada.isEmpty() && inicio.isEmpty();
 	}
 	private void derivar(){
 		//TO-DO
+		Vocabulary in = inicio.pop();
+		Productions p = g.buscarProduccion(entrada.peek(), in);
+		for(Vocabulary c : p.getConsecuente()){
+			inicio.push(c);
+		}
 	}
 	private void casar(){
 		//TO-DO
 		Vocabulary in = inicio.pop();
 		Vocabulary en = entrada.pop();
-		//in.getVocabulario().substring(1,X);
-		//en.getVocabulario().substring(1,X);
+		System.out.println(in.getVocabulario()+" , "+en.getVocabulario());
 	}
 	
 	private boolean primerElementoIgual(){
-			return (inicio.peek().getVocabulario().charAt(0))==(entrada.peek().getVocabulario().charAt(0)); 
+			return (inicio.peek().getVocabulario()).equals((entrada.peek().getVocabulario())); 
 	}
 	private boolean firstElementIsNonTerminal(){
-		return g.getVn().contains(inicio.peek().getVocabulario().charAt(0));
+		return g.getVn().contains(inicio.peek().getVocabulario());
 	}
 	
 	
 	/**
 	 * @param args
+	 * @throws ErrorSintactico 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ErrorSintactico {
 		// TODO Apéndice de método generado automáticamente
-
+		Stack<Vocabulary> cadena = new Stack<Vocabulary>();
+		//cadena.add(new Vocabulary(")"));
+		cadena.add(new Vocabulary("i"));
+		cadena.add(new Vocabulary("+"));
+		cadena.add(new Vocabulary("i"));
+		//cadena.add(new Vocabulary("("));
+		AnalisisSintactico an = new AnalisisSintactico (cadena);
 	}
 
 }

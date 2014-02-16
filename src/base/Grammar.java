@@ -18,9 +18,9 @@ public class Grammar {
 		this.p = p;
 		this.s = s;
 	}
-	public Productions buscarProduccion(Terminals t,NonTerminals s){
+	public Productions buscarProduccion(Vocabulary t,Vocabulary s){
 		for (Productions find: p){
-			if(find.getAntecedente().equals(s)){
+			if(find.getAntecedente().getVocabulario().equals(s.getVocabulario())){
 				for (Vocabulary cn:find.getConsecuente()){
 					if(cn.getVocabulario().equals(t.getVocabulario()))
 						return find;
