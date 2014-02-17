@@ -11,7 +11,7 @@ public class Analisis {
 		// TODO Apéndice de método generado automáticamente
 
 	}*/
-	public Analisis (Grammar g, Terminals t){
+	public Analisis (){
 		
 	}
 
