@@ -64,13 +64,27 @@ public class Analisis {
 						 * aqui va el código que se implementará para comprobar si el caracter pertenece a los delimitadores 'del'
 						 * a los numeros 'N' o a las letras 'L' con unas sentencias de if-else
 						 */
+						if (del.contains(caracter))
+							estado=0;
+						else if (L.contains(caracter))
+							estado = 1;
+						else if (N.contains(caracter))
+							estado = 16;
+						
+						
 					}break;
 					}
 			}break;
 			case 1:{
-				concatenarCaracter (caracter)
+				concatenarCaracter (caracter);
 				caracter= leerSiguienteCaracter();
 				//sentencias if-else dado que no se puede comprobar con funciones en el switch
+				if (del1.contains(caracter))
+					estado = 2;
+				else if (N.contains(caracter))
+					estado = 3;
+				else if (L.contains(caracter))
+					estado = 1;
 				
 				/*switch (caracter){
 				case del1: estado = 2;break;
@@ -89,7 +103,12 @@ public class Analisis {
 				concatenarCaracter (caracter);
 				caracter = leerSiguienteCaracter();
 //sentencias if-else dado que no se puede comprobar con funciones en el switch
-				
+				if (del1.contains(caracter))
+					estado = 4;
+				else if (N.contains(caracter))
+					estado = 3;
+				else if (L.contains(caracter))
+					estado = 3;
 				/*switch (caracter){
 				case del1: estado = 4;break;
 				case N: estado = 3;break;
@@ -113,6 +132,8 @@ public class Analisis {
 			case 7:{
 				caracter = leerSiguienteCaracter();
 				//sentencia if
+				if (del2.contains(caracter))
+					estado = 11;
 				
 				/*switch (caracter){
 				case del2: estado=11;break;
@@ -121,19 +142,21 @@ public class Analisis {
 			case 8:{
 				caracter = leerSiguienteCaracter();
 				//sentencia if
-				
+				if (del2.contains(caracter))
+					estado = 12;
 				/*switch(caracter){
 				case del2: estado= 12;
 				}*/
 			}
 			case 9:{
 				daToken1 (TK_FIN_SENT);
-				estado =0;
+				estado = 0;
 			}break;
 			case 10:{
 				caracter = leerSiguienteCaracter();
 				//sentencia if
-				
+				if (del2.contains(caracter))
+					estado = 13;
 				/*switch(caracter){
 				case del2: estado = 13;break;
 				}*/
@@ -167,7 +190,10 @@ public class Analisis {
 				valor = valor * 10 + digito;
 				caracter = leerSiguienteCaracter();
 				//sentencia if-else
-				
+				if (N.contains(caracter))
+					estado = 16;
+				else if (del1.contains(caracter))
+					estado = 17;
 				/*switch (caracter){
 				case 'N': estado = 16;break;
 				case del1: estado = 17;break;
