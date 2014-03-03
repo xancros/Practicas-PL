@@ -3,6 +3,8 @@ package practica3;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import base.*;
 
@@ -24,12 +26,22 @@ public class Analisis {
 		// TODO Apéndice de método generado automáticamente
 
 	}*/
-	private static Set<Integer> N;
-	private static Set<Character> L;
-	private static Set<Character> del;
-	private static Set<Character> del1;
-	private static Set<Character> del2;
+	private static Pattern N;
+	private static Pattern L;
+	private static Pattern del;
+	private static Pattern del1;
+	private static Pattern del2;
+	private static Matcher matchNumber;
+	private static Matcher matchLanguage;
+	private static Matcher matchDel;
+	private static Matcher matchDel1;
+	private static Matcher matchDel2;
 	public Analisis (){
+		L = Pattern.compile("[a-zA-Z]+");
+		N = Pattern.compile("[0-9]+");
+		del = Pattern.compile("\b|\t");
+		del1 = Pattern.compile(del.pattern()+"|{|=|+|;|)|<");
+		del2 = Pattern.compile(del.pattern()+"|(|"+N.pattern()+"|"+L.pattern());
 		
 	}
 	private boolean hayCaracteres(){
@@ -39,6 +51,7 @@ public class Analisis {
 		int estado=0;
 		int valor=0;
 		int digito=0;
+		String cadena;
 		char caracter;
 		while(hayCaracteres()){
 			switch(estado){
@@ -47,6 +60,13 @@ public class Analisis {
 					digito = 0;
 					valor = 0;
 					caracter = leerSiguienteCaracter();
+					//Matcher mat = pat.matcher(cadena);
+					cadena = String.valueOf(caracter);
+					matchLanguage = L.matcher(cadena);
+					matchNumber = N.matcher(cadena);
+					matchDel = del.matcher(cadena);
+					matchDel1 = del1.matcher(cadena);
+					matchDel2 = del2.matcher(cadena);
 					switch (caracter){
 					//case del: estado = 0;break;
 					//case 'L': estado = 1;break;
@@ -64,11 +84,11 @@ public class Analisis {
 						 * aqui va el código que se implementará para comprobar si el caracter pertenece a los delimitadores 'del'
 						 * a los numeros 'N' o a las letras 'L' con unas sentencias de if-else
 						 */
-						if (del.contains(caracter))
+						if (matchDel.matches())
 							estado=0;
-						else if (L.contains(caracter))
+						else if (matchLanguage.matches())
 							estado = 1;
-						else if (N.contains(caracter))
+						else if (matchNumber.matches())
 							estado = 16;
 						
 						
@@ -78,12 +98,18 @@ public class Analisis {
 			case 1:{
 				concatenarCaracter (caracter);
 				caracter= leerSiguienteCaracter();
+				cadena = String.valueOf(caracter);
+				matchLanguage = L.matcher(cadena);
+				matchNumber = N.matcher(cadena);
+				
+				matchDel1 = del1.matcher(cadena);
+				
 				//sentencias if-else dado que no se puede comprobar con funciones en el switch
-				if (del1.contains(caracter))
+				if (matchDel1.matches())
 					estado = 2;
-				else if (N.contains(caracter))
+				else if (matchNumber.matches())
 					estado = 3;
-				else if (L.contains(caracter))
+				else if (matchLanguage.matches())
 					estado = 1;
 				
 				/*switch (caracter){
@@ -102,12 +128,18 @@ public class Analisis {
 			case 3:{
 				concatenarCaracter (caracter);
 				caracter = leerSiguienteCaracter();
+				cadena = String.valueOf(caracter);
+				matchLanguage = L.matcher(cadena);
+				matchNumber = N.matcher(cadena);
+				
+				matchDel1 = del1.matcher(cadena);
+				
 //sentencias if-else dado que no se puede comprobar con funciones en el switch
-				if (del1.contains(caracter))
+				if (matchDel1.matches())
 					estado = 4;
-				else if (N.contains(caracter))
+				else if (matchNumber.matches())
 					estado = 3;
-				else if (L.contains(caracter))
+				else if (matchLanguage.matches())
 					estado = 3;
 				/*switch (caracter){
 				case del1: estado = 4;break;
@@ -132,7 +164,10 @@ public class Analisis {
 			case 7:{
 				caracter = leerSiguienteCaracter();
 				//sentencia if
-				if (del2.contains(caracter))
+				
+				
+				matchDel2 = del2.matcher(cadena);
+				if (matchDel2.matches())
 					estado = 11;
 				
 				/*switch (caracter){
@@ -142,7 +177,10 @@ public class Analisis {
 			case 8:{
 				caracter = leerSiguienteCaracter();
 				//sentencia if
-				if (del2.contains(caracter))
+				
+				
+				matchDel2 = del2.matcher(cadena);
+				if (matchDel2.matches())
 					estado = 12;
 				/*switch(caracter){
 				case del2: estado= 12;
@@ -189,10 +227,16 @@ public class Analisis {
 				digito = convierteNumero ( caracter );
 				valor = valor * 10 + digito;
 				caracter = leerSiguienteCaracter();
+				cadena = String.valueOf(caracter);
+				
+				matchNumber = N.matcher(cadena);
+				
+				matchDel1 = del1.matcher(cadena);
+				
 				//sentencia if-else
-				if (N.contains(caracter))
+				if (matchNumber.matches())
 					estado = 16;
-				else if (del1.contains(caracter))
+				else if (matchDel1.matches())
 					estado = 17;
 				/*switch (caracter){
 				case 'N': estado = 16;break;
