@@ -7,6 +7,16 @@ import java.util.Set;
 import base.*;
 
 public class Analisis {
+	private static String TK_ID = null;
+	private static final char TK_LLAV_ABR = '{';
+	private static final char TK_LLAV_CER = '}';
+	private static final char TK_FIN_SENT = ';';
+	private static final char TK_ASIG = '=';
+	private static final char TK_MAS = '+';
+	private static final char TK_MENOR = '<';
+	private static final char TK_PAR_ABR = '(';
+	private static final char TK_PAR_CER = ')';
+	private static String TK_CTE_NUM = null;
 	/**
 	 * @param args
 	 */
