@@ -8,7 +8,10 @@ import java.util.regex.Pattern;
 
 import base.*;
 
+//falta los buffers que controla las lineas que se leen del fichero
+//y tambien falta terminar los metodos y tokens
 public class Analisis {
+	
 	private static String TK_ID = null;
 	private static final char TK_LLAV_ABR = '{';
 	private static final char TK_LLAV_CER = '}';
