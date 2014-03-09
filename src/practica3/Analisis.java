@@ -12,16 +12,20 @@ import base.*;
 //y tambien falta terminar los metodos y tokens
 public class Analisis {
 	
-	private static String TK_ID = null;
-	private static final char TK_LLAV_ABR = '{';
-	private static final char TK_LLAV_CER = '}';
-	private static final char TK_FIN_SENT = ';';
-	private static final char TK_ASIG = '=';
-	private static final char TK_MAS = '+';
-	private static final char TK_MENOR = '<';
-	private static final char TK_PAR_ABR = '(';
-	private static final char TK_PAR_CER = ')';
-	private static String TK_CTE_NUM = null;
+	private static final String TK_ID = "TK_ID";
+	private static final String TK_LLAV_ABR = "TK_LLAV_ABR";
+	private static final String TK_LLAV_CER = "TK_LLAV_CER";
+	private static final String TK_FIN_SENT = "TK_FIN_SENT";
+	private static final String TK_ASIG = "TK_ASIG";
+	private static final String TK_MAS = "TK_MAS";
+	private static final String TK_MENOR = "TK_MENOR";
+	private static final String TK_PAR_ABR = "TK_PAR_ABR";
+	private static final String TK_PAR_CER = "TK_PAR_CER";
+	private static final String TK_CTE_NUM = "TK_CTE_NUM";
+	private int inicio,delantero;
+	private StringBuffer subBuffer1;
+	private StringBuffer subBuffer2;
+	private String buffer;
 	/**
 	 * @param args
 	 */
@@ -39,14 +43,18 @@ public class Analisis {
 	private static Matcher matchDel;
 	private static Matcher matchDel1;
 	private static Matcher matchDel2;
+	
+	
 	public Analisis (){
 		L = Pattern.compile("[a-zA-Z]+");
 		N = Pattern.compile("[0-9]+");
 		del = Pattern.compile("\b|\t");
 		del1 = Pattern.compile(del.pattern()+"|{|=|+|;|)|<");
 		del2 = Pattern.compile(del.pattern()+"|(|"+N.pattern()+"|"+L.pattern());
-		
+		subBuffer1 = new StringBuffer("int casa = 0");
 	}
+	
+	
 	private boolean hayCaracteres(){
 		return false;
 	}
@@ -167,7 +175,7 @@ public class Analisis {
 			case 7:{
 				caracter = leerSiguienteCaracter();
 				//sentencia if
-				
+				cadena = String.valueOf(caracter);
 				
 				matchDel2 = del2.matcher(cadena);
 				if (matchDel2.matches())
@@ -181,7 +189,7 @@ public class Analisis {
 				caracter = leerSiguienteCaracter();
 				//sentencia if
 				
-				
+				cadena = String.valueOf(caracter);
 				matchDel2 = del2.matcher(cadena);
 				if (matchDel2.matches())
 					estado = 12;
@@ -196,7 +204,9 @@ public class Analisis {
 			case 10:{
 				caracter = leerSiguienteCaracter();
 				//sentencia if
-				if (del2.contains(caracter))
+				cadena = String.valueOf(caracter);
+				matchDel2 = del2.matcher(cadena);
+				if (matchDel2.matches())
 					estado = 13;
 				/*switch(caracter){
 				case del2: estado = 13;break;
@@ -272,16 +282,17 @@ public class Analisis {
 	private void iniLexema(){
 		
 	}
-	private void diferPRId (char c){
+	private void diferPRId (String lex){
 		
 	}
 	private void retrocesoPuntero(){
 		
 	}
-	private void daToken2(){
+	private String daToken2(String tk, String lex){
+		return new String ("<"+tk+", "+lex+">");
 		
 	}
-	private void daToken1(){
-		
+	private String daToken1(String tk){
+		return new String ("<"+tk+">");
 	}
 }
