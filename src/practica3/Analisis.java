@@ -22,8 +22,8 @@ public class Analisis {
 	private static final String TK_PAR_ABR = "TK_PAR_ABR";
 	private static final String TK_PAR_CER = "TK_PAR_CER";
 	private static final String TK_CTE_NUM = "TK_CTE_NUM";
-	private int inicio,delantero;
-	private StringBuffer subBuffer1;
+	private int inicio,delantero,fin;
+	private StringBuffer subBuffer1; // actualmente lo usamos hay que usar otra cosa
 	private StringBuffer subBuffer2;
 	private String buffer;
 	/**
@@ -51,26 +51,60 @@ public class Analisis {
 		del = Pattern.compile("\b|\t");
 		del1 = Pattern.compile(del.pattern()+"|{|=|+|;|)|<");
 		del2 = Pattern.compile(del.pattern()+"|(|"+N.pattern()+"|"+L.pattern());
-		subBuffer1 = new StringBuffer("int casa = 0");
+		subBuffer1 = new StringBuffer("0");
+		delantero = 0;
+		inicio = 0;
+		fin = subBuffer1.length();
 	}
 	
 	
 	private boolean hayCaracteres(){
-		return false;
+		return fin>=delantero;
+	}
+	private char leerSiguienteCaracter(){
+		return subBuffer1.charAt(delantero);
+	}
+	private int convierteNumero(char c){
+		
+		return Integer.valueOf(String.valueOf(c));
+	}
+	private String concatenarCaracter (char c){
+		
+		return null;
+	}
+	private String daLexema(){
+		return subBuffer1.substring(inicio, delantero);
+	}
+	private void iniLexema(){
+		
+	}
+	private boolean diferPRId (String lex){
+		//mirar si es palabra reservada o no y devolver el token de lo que es
+		return true;
+	}
+	private void retrocesoPuntero(){
+		delantero --;
+	}
+	private String daToken2(String tk, String lex){
+		return new String ("<"+tk+", "+lex+">");
+		
+	}
+	private String daToken1(String tk){
+		return new String ("<"+tk+">");
 	}
 	private void analizador(){
 		int estado=0;
 		int valor=0;
 		int digito=0;
 		String cadena;
-		char caracter;
+		char caracter = 0;
 		while(hayCaracteres()){
 			switch(estado){
 			case 0:{
 					iniLexema();
 					digito = 0;
 					valor = 0;
-					caracter = leerSiguienteCaracter();
+					caracter = this.leerSiguienteCaracter();
 					//Matcher mat = pat.matcher(cadena);
 					cadena = String.valueOf(caracter);
 					matchLanguage = L.matcher(cadena);
@@ -137,7 +171,7 @@ public class Analisis {
 				estado = 0;
 			}break;
 			case 3:{
-				concatenarCaracter (caracter);
+				//concatenarCaracter (caracter);
 				caracter = leerSiguienteCaracter();
 				cadena = String.valueOf(caracter);
 				matchLanguage = L.matcher(cadena);
@@ -259,40 +293,11 @@ public class Analisis {
 			}break;
 			case 17:{
 				retrocesoPuntero();
-				daToken2 (TK_CTE_NUM, valor);
+				daToken2 (TK_CTE_NUM, String.valueOf(valor));
 				estado = 0;
 			}break;
 			}
 		}
 	}
-	private void leerSiguenteCaracter(){
-		
-	}
-	private int convierteNumero(char c){
-		
-		return -1;
-	}
-	private String concatenarCaracter (char c){
-		
-		return null;
-	}
-	private void daLexema(){
-		
-	}
-	private void iniLexema(){
-		
-	}
-	private void diferPRId (String lex){
-		
-	}
-	private void retrocesoPuntero(){
-		
-	}
-	private String daToken2(String tk, String lex){
-		return new String ("<"+tk+", "+lex+">");
-		
-	}
-	private String daToken1(String tk){
-		return new String ("<"+tk+">");
-	}
+	
 }
