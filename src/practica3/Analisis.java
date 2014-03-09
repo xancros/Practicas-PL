@@ -29,10 +29,10 @@ public class Analisis {
 	/**
 	 * @param args
 	 */
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		// TODO Apéndice de método generado automáticamente
-
-	}*/
+		Analisis a = new Analisis();
+	}
 	private static Pattern N;
 	private static Pattern L;
 	private static Pattern del;
@@ -49,12 +49,13 @@ public class Analisis {
 		L = Pattern.compile("[a-zA-Z]+");
 		N = Pattern.compile("[0-9]+");
 		del = Pattern.compile("\b|\t");
-		del1 = Pattern.compile(del.pattern()+"|{|=|+|;|)|<");
-		del2 = Pattern.compile(del.pattern()+"|(|"+N.pattern()+"|"+L.pattern());
-		subBuffer1 = new StringBuffer("0");
+		del1 = Pattern.compile(del.pattern()+"|[{]|=|[+]|;|[)]|<");
+		del2 = Pattern.compile(del.pattern()+"|[(]|"+N.pattern()+"|"+L.pattern());
+		subBuffer1 = new StringBuffer("5;");
 		delantero = 0;
 		inicio = 0;
 		fin = subBuffer1.length();
+		analizador();
 	}
 	
 	
@@ -62,7 +63,9 @@ public class Analisis {
 		return fin>=delantero;
 	}
 	private char leerSiguienteCaracter(){
-		return subBuffer1.charAt(delantero);
+		char car =subBuffer1.charAt(delantero);
+		delantero++;
+		return car;
 	}
 	private int convierteNumero(char c){
 		
@@ -76,21 +79,26 @@ public class Analisis {
 		return subBuffer1.substring(inicio, delantero);
 	}
 	private void iniLexema(){
-		
+		inicio=delantero;
 	}
 	private boolean diferPRId (String lex){
 		//mirar si es palabra reservada o no y devolver el token de lo que es
+		delantero++;
 		return true;
 	}
 	private void retrocesoPuntero(){
 		delantero --;
 	}
 	private String daToken2(String tk, String lex){
-		return new String ("<"+tk+", "+lex+">");
+		String tok = ("<"+tk+", "+lex+">");
+		System.out.println(tok);
+		return tok;
 		
 	}
 	private String daToken1(String tk){
-		return new String ("<"+tk+">");
+		String tok = ("<"+tk+">");
+		System.out.println(tok);
+		return tok;
 	}
 	private void analizador(){
 		int estado=0;
