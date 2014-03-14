@@ -22,6 +22,7 @@ public class Analisis {
 	private static final String TK_PAR_ABR = "TK_PAR_ABR";
 	private static final String TK_PAR_CER = "TK_PAR_CER";
 	private static final String TK_CTE_NUM = "TK_CTE_NUM";
+	private static final String TK_PR = "TK_PR";
 	private int inicio,delantero,fin;
 	private StringBuffer subBuffer1; // actualmente lo usamos hay que usar otra cosa
 	private StringBuffer subBuffer2;
@@ -38,32 +39,40 @@ public class Analisis {
 	private static Pattern del;
 	private static Pattern del1;
 	private static Pattern del2;
+	private static Pattern palabrasReservadas;
 	private static Matcher matchNumber;
 	private static Matcher matchLanguage;
 	private static Matcher matchDel;
 	private static Matcher matchDel1;
 	private static Matcher matchDel2;
-	
-	
+	private static Matcher matchPalRes;
+	private String palabra;
 	public Analisis (){
 		L = Pattern.compile("[a-zA-Z]+");
 		N = Pattern.compile("[0-9]+");
 		del = Pattern.compile("\b|\t");
-		del1 = Pattern.compile(del.pattern()+"|[{]|=|[+]|;|[)]|<");
-		del2 = Pattern.compile(del.pattern()+"|[(]|"+N.pattern()+"|"+L.pattern());
-		subBuffer1 = new StringBuffer("5;");
+		del1 = Pattern.compile(del.pattern()+"|[(]|"+"|[{]|=|[+]|;|[)]|<|#");
+		del2 = Pattern.compile(del.pattern()+N.pattern()+"|"+L.pattern());
+		palabrasReservadas = Pattern.compile("for|while|int|char|Integer|Character|float|Float|String|do|switch|case|if|else");
+		//subBuffer1 = new StringBuffer("int casa;");
+		buffer = new String ("for(int i=0;i<10;i++);");
 		delantero = 0;
 		inicio = 0;
-		fin = subBuffer1.length();
+		fin = buffer.length();
+		subBuffer1 = new StringBuffer(buffer.replaceAll("\\s","#"));
+		//fin = subBuffer1.length();
 		analizador();
 	}
 	
 	
-	private boolean hayCaracteres(){
-		return fin>=delantero;
+	private boolean noHayCaracteres(){
+		return delantero>fin;
 	}
 	private char leerSiguienteCaracter(){
+		//subBuffer1.trimToSize();
 		char car =subBuffer1.charAt(delantero);
+		
+		//char car = buffer.charAt(delantero);
 		delantero++;
 		return car;
 	}
@@ -72,22 +81,32 @@ public class Analisis {
 		return Integer.valueOf(String.valueOf(c));
 	}
 	private String concatenarCaracter (char c){
-		
-		return null;
+		palabra=palabra.concat(String.valueOf(c));
+		return palabra;
 	}
 	private String daLexema(){
-		return subBuffer1.substring(inicio, delantero);
+		//return subBuffer1.substring(inicio, delantero);
+		return palabra;
 	}
 	private void iniLexema(){
+		palabra=new String();
 		inicio=delantero;
+		
 	}
 	private boolean diferPRId (String lex){
 		//mirar si es palabra reservada o no y devolver el token de lo que es
+		matchPalRes=palabrasReservadas.matcher(lex);
+		if(matchPalRes.matches()){
+			//es una palabra reservada
+			this.daToken2(TK_PR, lex);
+		}else{
+			this.daToken2(TK_ID, lex);
+		}
 		delantero++;
 		return true;
 	}
 	private void retrocesoPuntero(){
-		delantero --;
+		delantero-=2;
 	}
 	private String daToken2(String tk, String lex){
 		String tok = ("<"+tk+", "+lex+">");
@@ -104,9 +123,10 @@ public class Analisis {
 		int estado=0;
 		int valor=0;
 		int digito=0;
+		palabra=new String();
 		String cadena;
 		char caracter = 0;
-		while(hayCaracteres()){
+		while(!noHayCaracteres()){
 			switch(estado){
 			case 0:{
 					iniLexema();
