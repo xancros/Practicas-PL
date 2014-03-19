@@ -13,7 +13,13 @@ public class Productions {
 		antecedente= new NonTerminals(ant);
 		consecuente=con;
 	}
-	
+	/*public Vocabulary dameConsecuente(){
+		String c = new String();
+		for(Vocabulary v:this.getConsecuente()){
+			c+=v.getVocabulario();
+		}
+		return new Vocabulary(c);
+	}*/
 	public NonTerminals getAntecedente() {
 		return antecedente;
 	}
@@ -29,6 +35,7 @@ public class Productions {
 	public void setConsecuente(Collection<Vocabulary> consecuente) {
 		this.consecuente = consecuente;
 	}
+	
 	public Vocabulary getFirstElement(){
 		Vocabulary e=null;
 		for(Vocabulary element : consecuente)
