@@ -55,7 +55,8 @@ public class Analisis {
 		del2 = Pattern.compile(del.pattern()+N.pattern()+"|"+L.pattern());
 		palabrasReservadas = Pattern.compile("for|while|int|char|Integer|Character|float|Float|String|do|switch|case|if|else");
 		//subBuffer1 = new StringBuffer("int casa;");
-		buffer = new String ("for(int i=0;i<10;i++);");
+		//"for(int i=0;i<10;i++);"
+		buffer = new String ("do{id=id+num;}while(id<num);");
 		delantero = 0;
 		inicio = 0;
 		fin = buffer.length();
@@ -106,7 +107,7 @@ public class Analisis {
 		return true;
 	}
 	private void retrocesoPuntero(){
-		delantero-=2;
+		delantero--;
 	}
 	private String daToken2(String tk, String lex){
 		String tok = ("<"+tk+", "+lex+">");
@@ -195,6 +196,7 @@ public class Analisis {
 			}break;
 			case 2:{
 				retrocesoPuntero();
+				this.delantero--;
 				diferPRId(daLexema());
 				estado = 0;
 			}break;
@@ -235,18 +237,21 @@ public class Analisis {
 				estado =  0;
 			}break;
 			case 7:{
-				caracter = leerSiguienteCaracter();
-				//sentencia if
-				cadena = String.valueOf(caracter);
 				
+				caracter = leerSiguienteCaracter();
+				cadena = String.valueOf(caracter);
 				matchDel2 = del2.matcher(cadena);
 				if (matchDel2.matches())
 					estado = 11;
-				
+				/*else{
+					this.daToken1(TK_ASIG);
+					estado = 0;
+					this.delantero--;
+				}*/
 				/*switch (caracter){
 				case del2: estado=11;break;
 				}*/
-			}
+			}break;
 			case 8:{
 				caracter = leerSiguienteCaracter();
 				//sentencia if
@@ -258,7 +263,7 @@ public class Analisis {
 				/*switch(caracter){
 				case del2: estado= 12;
 				}*/
-			}
+			}break;
 			case 9:{
 				daToken1 (TK_FIN_SENT);
 				estado = 0;
@@ -320,7 +325,8 @@ public class Analisis {
 				}*/
 			}break;
 			case 17:{
-				retrocesoPuntero();
+				//retrocesoPuntero();
+				this.delantero--;
 				daToken2 (TK_CTE_NUM, String.valueOf(valor));
 				estado = 0;
 			}break;
