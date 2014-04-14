@@ -1,5 +1,9 @@
 package practica3;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -39,6 +43,7 @@ public class Analisis {
 	private static Pattern del;
 	private static Pattern del1;
 	private static Pattern del2;
+	private static Pattern comentario;
 	private static Pattern palabrasReservadas;
 	private static Matcher matchNumber;
 	private static Matcher matchLanguage;
@@ -46,6 +51,10 @@ public class Analisis {
 	private static Matcher matchDel1;
 	private static Matcher matchDel2;
 	private static Matcher matchPalRes;
+	private static Matcher matchComentario;
+	private File archivo = null;
+    private FileReader fr = null;
+    private BufferedReader br = null;
 	private String palabra;
 	public Analisis (){
 		L = Pattern.compile("[a-zA-Z]+");
@@ -54,20 +63,60 @@ public class Analisis {
 		del1 = Pattern.compile(del.pattern()+"|[(]|"+"|[{]|=|[+]|;|[)]|<|#");
 		del2 = Pattern.compile(del.pattern()+N.pattern()+"|"+L.pattern());
 		palabrasReservadas = Pattern.compile("for|while|int|char|Integer|Character|float|Float|String|do|switch|case|if|else");
+		comentario = Pattern.compile("[//]|[/*]|[*/]");
 		//subBuffer1 = new StringBuffer("int casa;");
 		//"for(int i=0;i<10;i++);"
-		buffer = new String ("do{id=id+num;}while(id<num);");
+		//buffer = new String ("do{id=id+num;}while(id<num);");
 		delantero = 0;
 		inicio = 0;
-		fin = buffer.length();
-		subBuffer1 = new StringBuffer(buffer.replaceAll("\\s","#"));
+		
+		//subBuffer1 = new StringBuffer(buffer.replaceAll("\\s","#"));
 		//fin = subBuffer1.length();
+		try{
+			archivo = new File("./src/practica3/datos.txt");
+			fr = new FileReader (archivo);
+	         br = new BufferedReader(fr);
+	         cargarFichero();
+	         subBuffer1 = new StringBuffer(buffer);
 		analizador();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+	         // En el finally cerramos el fichero, para asegurarnos
+	         // que se cierra tanto si todo va bien como si salta 
+	         // una excepcion.
+	         try{                    
+	            if( null != fr ){   
+	               fr.close();     
+	            }                  
+	         }catch (Exception e2){ 
+	            e2.printStackTrace();
+	         }
+	      }
 	}
 	
-	
-	private boolean noHayCaracteres(){
-		return delantero>fin;
+	private void cargarFichero(){
+		String Caracter;
+	     String valor=" ";
+	     try{            
+	            while ((Caracter=br.readLine())!=null){
+	            	subBuffer1 = new StringBuffer(Caracter.replaceAll("\\s","#"));
+	            	valor=valor+subBuffer1;  
+	            }            
+	            fin=valor.length();
+	            buffer=valor;
+ 
+	     }
+	     catch(IOException e){
+	         
+	     
+	     }
+	    
+	}
+	private boolean noHayCaracteres() throws IOException{
+		
+		
+		return fin<=0;
 	}
 	private char leerSiguienteCaracter(){
 		//subBuffer1.trimToSize();
@@ -75,6 +124,7 @@ public class Analisis {
 		
 		//char car = buffer.charAt(delantero);
 		delantero++;
+		fin--;
 		return car;
 	}
 	private int convierteNumero(char c){
@@ -108,6 +158,7 @@ public class Analisis {
 	}
 	private void retrocesoPuntero(){
 		delantero--;
+		fin++;
 	}
 	private String daToken2(String tk, String lex){
 		String tok = ("<"+tk+", "+lex+">");
@@ -120,7 +171,7 @@ public class Analisis {
 		System.out.println(tok);
 		return tok;
 	}
-	private void analizador(){
+	private void analizador() throws IOException{
 		int estado=0;
 		int valor=0;
 		int digito=0;
@@ -332,6 +383,7 @@ public class Analisis {
 			}break;
 			}
 		}
+		System.out.println("NO HAY MAS CARACTERES");
 	}
 	
 }

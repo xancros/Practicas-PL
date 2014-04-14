@@ -1,0 +1,3 @@
+do{
+   id = id + num;
+  }while (id<num);
