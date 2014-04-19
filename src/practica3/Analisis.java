@@ -80,7 +80,7 @@ public class Analisis {
 	         subBuffer1 = new StringBuffer(buffer);
 		analizador();
 		}catch(Exception e){
-			e.printStackTrace();
+			
 		}finally{
 	         // En el finally cerramos el fichero, para asegurarnos
 	         // que se cierra tanto si todo va bien como si salta 
@@ -181,6 +181,7 @@ public class Analisis {
 		while(!noHayCaracteres()){
 			switch(estado){
 			case 0:{
+					
 					iniLexema();
 					digito = 0;
 					valor = 0;
@@ -203,6 +204,13 @@ public class Analisis {
 					case '=' : estado = 7;break;
 					case '+' : estado = 8;break;
 					case '<' : estado = 10;break;
+					case '/' :{
+						
+						caracter = this.leerSiguienteCaracter();
+						while(caracter!='/')
+							caracter = this.leerSiguienteCaracter();
+						
+					}break;
 					//case 'N' : estado = 16;break;
 					default:{
 						/*
