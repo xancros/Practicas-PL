@@ -9,6 +9,7 @@ public class Grammar {
 	private Collection<Terminals> vt;
 	private Collection<Productions> p;
 	private NonTerminals s;
+	private final static Terminals lambda=new Terminals("λ");
 	
 	public Grammar(Collection<NonTerminals> vn, Collection<Terminals> vt,
 			Collection<Productions> p, NonTerminals s) {
@@ -91,6 +92,9 @@ public class Grammar {
 		}
 
 		return s;
+	}
+	public static Terminals getLambda() {
+		return lambda;
 	}
 
 }
