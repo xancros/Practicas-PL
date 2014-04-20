@@ -16,10 +16,66 @@ import excepciones.ErrorSintactico;
 
 public class AnalizadorSintacticoLLgenerico extends AnalizadorSintactico{
 	private Grammar g;
-	
+	private class Tabla{
+		NonTerminals linea;
+		Terminals columna;
+		Collection<Vocabulary> consecuente;
+		Tabla(NonTerminals x,Terminals y,Collection<Vocabulary> xy){
+			linea=x;
+			columna=y;
+			consecuente=xy;
+		}
+	}
+	private List<Tabla> tabla;
 	protected AnalizadorSintacticoLLgenerico(ArrayList<Vocabulary> input) {
 		super(input);
+		
 		// TODO Auto-generated constructor stub
+	}
+	
+	private void rellenarTabla(){
+		tabla = new LinkedList<Tabla>();
+		for(Productions p:g.getP()){
+			for(Terminals t:directores(p)){
+				tabla.add(new Tabla(p.getAntecedente(),t,p.getConsecuente()));
+			}
+		}
+	}
+	private Set<Terminals> siguientes(NonTerminals nt){
+		Set<Terminals> listaSiguientes = new HashSet<Terminals>();
+		if(nt.getVocabulario().equals(g.getS().getVocabulario()))
+			listaSiguientes.add(g.getDolar());
+		for(Productions p:g.getP()){
+			if(p.getConsecuente().contains(nt)){
+				
+				List<Vocabulary> listaProd = (List<Vocabulary>)p.getConsecuente();
+				if(listaProd.indexOf(nt)==listaProd.size()-1){   //ultimo elemento?
+					if(!p.getAntecedente().equals(nt))
+						listaSiguientes.addAll(siguientes(p.getAntecedente()));
+				}else{
+					List<Vocabulary> subLista=listaProd.subList(listaProd.indexOf(nt)+1, listaProd.size());
+					if(iniciales(subLista).contains(g.getLambda())){
+						listaSiguientes.addAll(iniciales(subLista));
+						listaSiguientes.remove(g.getLambda());
+						listaSiguientes.addAll(siguientes(p.getAntecedente()));
+						
+					}else{
+						listaSiguientes.addAll(iniciales(subLista));
+					}
+				}
+			}
+		}
+		return listaSiguientes;
+	}
+	private Set<Terminals> directores(Productions p){
+		Set<Terminals> directores=new HashSet<Terminals>();
+		directores.addAll(iniciales(p.getAntecedente()));
+		if(directores.contains(g.getLambda())){
+			directores.addAll(siguientes(p.getAntecedente()));
+			directores.remove(g.getLambda());
+		}
+		  
+		return directores;
 	}
 	/**
 	 * devolverá un booleano indicando si la gramática contienen 
@@ -50,13 +106,7 @@ public class AnalizadorSintacticoLLgenerico extends AnalizadorSintactico{
 		}
 		return (p.getAntecedente().getVocabulario().equals(ultimo.getVocabulario()));
 	}
-	/*
-	 * Collection<Vt> iniciales(Vt) ;
-Collection<Vt> iniciales(Vn) ;
-Collection<Vt> iniciales(Collection<V>) ;
 
-
-	 */
 	/**
 	 * 
 	 * @param t
@@ -121,6 +171,100 @@ Collection<Vt> iniciales(Collection<V>) ;
 	@Override
 	protected void generarGramatica() {
 		// TODO Auto-generated method stub
+		NonTerminals E = new NonTerminals("E");
+		NonTerminals E2 = new NonTerminals("E'");
+		NonTerminals T = new NonTerminals("T");
+		NonTerminals T2 = new NonTerminals("T'");
+		//NonTerminals F = new NonTerminals("F");
+		NonTerminals F = new NonTerminals("F");
+		
+		Terminals mas = new Terminals("+");
+		Terminals asterisco = new Terminals("*");
+		Terminals id = new Terminals("id");
+		Terminals abierto = new Terminals("(");
+		Terminals cerrado = new Terminals(")");
+		Terminals dolar = new Terminals("$");
+		Terminals lambda = new Terminals("λ");
+		Terminals n = new Terminals("n");
+		Collection<Vocabulary> cp1 = new LinkedList<Vocabulary>();
+		
+		cp1.add(T);
+		cp1.add(E2);
+		//cp1.add(T);
+		Productions p1 = new Productions("E",cp1);
+		
+		Collection<Vocabulary> cp2 = new LinkedList<Vocabulary>();
+		cp2.add(mas);
+		cp2.add(T);
+		cp2.add(E2);
+		Productions p2 = new Productions("E'",cp2);
+		
+		Collection<Vocabulary> cp3 = new LinkedList<Vocabulary>();
+		
+		cp3.add(lambda);
+		Productions p3 = new Productions("E'",cp3);
+		
+Collection<Vocabulary> cp4 = new LinkedList<Vocabulary>();
+		
+		cp4.add(F);
+		cp4.add(T2);
+		Productions p4 = new Productions("T",cp4);
+		
+Collection<Vocabulary> cp5 = new LinkedList<Vocabulary>();
+		cp5.add(asterisco);
+		cp5.add(F);
+		cp5.add(T2);
+		Productions p5 = new Productions("T'",cp5);
+		
+Collection<Vocabulary> cp6 = new LinkedList<Vocabulary>();
+		
+		cp6.add(lambda);
+		
+		Productions p6 = new Productions("T'",cp6);
+		
+Collection<Vocabulary> cp7 = new LinkedList<Vocabulary>();
+		
+		cp7.add(abierto);
+		cp7.add(E);
+		cp7.add(cerrado);
+		Productions p7 = new Productions("F",cp7);
+		
+Collection<Vocabulary> cp8 = new LinkedList<Vocabulary>();
+		
+		cp8.add(id);
+		Productions p8 = new Productions("F",cp8);
+Collection<Vocabulary> cp9 = new LinkedList<Vocabulary>();
+		
+		cp8.add(n);
+		Productions p9 = new Productions("F",cp9);
+		
+		Collection<NonTerminals> nt = new HashSet<NonTerminals>();
+		nt.add(E);
+		nt.add(E2);
+		nt.add(T);
+		nt.add(T2);
+		nt.add(F);
+		
+		Collection<Terminals> t = new HashSet<Terminals>();
+		t.add(mas);
+		t.add(asterisco);
+		t.add(id);
+		t.add(abierto);
+		t.add(cerrado);
+		t.add(n);
+		Collection<Productions> p = new HashSet<Productions>();
+		p.add(p1);
+		p.add(p2);
+		p.add(p3);
+		p.add(p4);
+		p.add(p5);
+		p.add(p6);
+		p.add(p7);
+		p.add(p8);
+		p.add(p9);
+		//System.out.println(p.toString());
+		g = new Grammar(nt,t,p,E);
+		//System.out.println(g.getS().getVocabulario());
 		
 	}
 	@Override
@@ -129,4 +273,13 @@ Collection<Vt> iniciales(Collection<V>) ;
 		
 	}
 
+	/*
+	 * Vocabulary in = inicio.pop();
+		Productions p = g.buscarProduccion(entrada.get(0), in);
+		if(p==null)
+			throw new excepciones.ErrorSintactico();
+		for(Vocabulary c : p.getConsecuente()){
+			inicio.add(c);
+		}
+	 */
 }
