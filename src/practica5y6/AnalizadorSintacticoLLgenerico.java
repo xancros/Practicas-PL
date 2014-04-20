@@ -29,7 +29,7 @@ public class AnalizadorSintacticoLLgenerico extends AnalizadorSintactico{
 	private List<Tabla> tabla;
 	protected AnalizadorSintacticoLLgenerico(ArrayList<Vocabulary> input) {
 		super(input);
-		
+		rellenarTabla();
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -270,16 +270,34 @@ Collection<Vocabulary> cp9 = new LinkedList<Vocabulary>();
 	@Override
 	protected void derivar() throws ErrorSintactico {
 		// TODO Auto-generated method stub
-		
-	}
-
-	/*
-	 * Vocabulary in = inicio.pop();
-		Productions p = g.buscarProduccion(entrada.get(0), in);
-		if(p==null)
+		//INICIO ES LA PILA DE LOS ELEMENTOS
+		//ENTRADA ES LA CADENA DE ENTRADA
+		Vocabulary in = inicio.pop();
+		Vocabulary en = entrada.get(0);
+		Collection<Vocabulary> produccionResultante=produccion(in,en);
+		if(produccionResultante==null){
 			throw new excepciones.ErrorSintactico();
-		for(Vocabulary c : p.getConsecuente()){
-			inicio.add(c);
 		}
-	 */
+		for(Vocabulary v:produccionResultante)
+			inicio.add(v);
+		/*
+		 * Vocabulary in = inicio.pop();
+			Productions p = g.buscarProduccion(entrada.get(0), in);
+			if(p==null)
+				throw new excepciones.ErrorSintactico();
+			for(Vocabulary c : p.getConsecuente()){
+				inicio.add(c);
+			}
+		 */
+	}
+private Collection<Vocabulary> produccion(Vocabulary p,Vocabulary en){
+		
+		for(Tabla t:tabla){
+			if(t.linea.getVocabulario().equals(p)&&t.columna.getVocabulario().equals(en)){
+				return t.consecuente;
+			}
+		}
+		return null;
+	}
+	
 }
