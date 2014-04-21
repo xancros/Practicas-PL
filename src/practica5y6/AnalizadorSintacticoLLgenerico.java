@@ -15,12 +15,12 @@ import excepciones.ErrorSintactico;
 
 
 public class AnalizadorSintacticoLLgenerico extends AnalizadorSintactico{
-	private Grammar g;
+	
 	private class Tabla{
 		NonTerminals linea;
 		Terminals columna;
-		Collection<Vocabulary> consecuente;
-		Tabla(NonTerminals x,Terminals y,Collection<Vocabulary> xy){
+		Productions consecuente;
+		Tabla(NonTerminals x,Terminals y,Productions xy){
 			linea=x;
 			columna=y;
 			consecuente=xy;
@@ -37,20 +37,33 @@ public class AnalizadorSintacticoLLgenerico extends AnalizadorSintactico{
 		tabla = new LinkedList<Tabla>();
 		for(Productions p:g.getP()){
 			for(Terminals t:directores(p)){
-				tabla.add(new Tabla(p.getAntecedente(),t,p.getConsecuente()));
+				tabla.add(new Tabla(p.getAntecedente(),t,p));
 			}
 		}
 	}
 	private Set<Terminals> siguientes(NonTerminals nt){
+		
 		Set<Terminals> listaSiguientes = new HashSet<Terminals>();
 		if(nt.getVocabulario().equals(g.getS().getVocabulario()))
 			listaSiguientes.add(g.getDolar());
 		for(Productions p:g.getP()){
-			if(p.getConsecuente().contains(nt)){
+			/*
+			 * for(NonTerminals ntrs:g.getVn())
+		for(Productions prd: g.getP()){
+			
+			List<Vocabulary> lista = (List<Vocabulary>)prd.getConsecuente();
+			if(lista.contains(ntrs)){
+				System.out.println(ntrs.getVocabulario()+"  ES CONTENIDO EN: ");
+				System.out.println("Produccion:"+prd.toString());
+				}
+		}
+			 */
+			List<Vocabulary> v = (List<Vocabulary>)p.getConsecuente();
+			if(v.contains(nt)){
 				
 				List<Vocabulary> listaProd = (List<Vocabulary>)p.getConsecuente();
 				if(listaProd.indexOf(nt)==listaProd.size()-1){   //ultimo elemento?
-					if(!p.getAntecedente().equals(nt))
+					if(!p.getAntecedente().getVocabulario().equals(nt.getVocabulario()))
 						listaSiguientes.addAll(siguientes(p.getAntecedente()));
 				}else{
 					List<Vocabulary> subLista=listaProd.subList(listaProd.indexOf(nt)+1, listaProd.size());
@@ -69,7 +82,7 @@ public class AnalizadorSintacticoLLgenerico extends AnalizadorSintactico{
 	}
 	private Set<Terminals> directores(Productions p){
 		Set<Terminals> directores=new HashSet<Terminals>();
-		directores.addAll(iniciales(p.getAntecedente()));
+		directores.addAll(iniciales(p.getConsecuente()));
 		if(directores.contains(g.getLambda())){
 			directores.addAll(siguientes(p.getAntecedente()));
 			directores.remove(g.getLambda());
@@ -125,6 +138,7 @@ public class AnalizadorSintacticoLLgenerico extends AnalizadorSintactico{
 	private Collection<Terminals> iniciales(NonTerminals nt){
 		Set<Terminals> conjunto = new HashSet<Terminals>();
 		for(Productions p : dameProducciones(nt)){
+			//System.out.println("Produccion: "+p.toString());
 			conjunto.addAll(iniciales(p.getConsecuente()));
 		}
 		return conjunto;
@@ -235,7 +249,7 @@ Collection<Vocabulary> cp8 = new LinkedList<Vocabulary>();
 		Productions p8 = new Productions("F",cp8);
 Collection<Vocabulary> cp9 = new LinkedList<Vocabulary>();
 		
-		cp8.add(n);
+		cp9.add(n);
 		Productions p9 = new Productions("F",cp9);
 		
 		Collection<NonTerminals> nt = new HashSet<NonTerminals>();
@@ -294,10 +308,38 @@ private Collection<Vocabulary> produccion(Vocabulary p,Vocabulary en){
 		
 		for(Tabla t:tabla){
 			if(t.linea.getVocabulario().equals(p)&&t.columna.getVocabulario().equals(en)){
-				return t.consecuente;
+				return t.consecuente.getConsecuente();
 			}
 		}
 		return null;
 	}
-	
+	public void mostrarTabla(){
+		System.out.print(" ");
+		for(Tabla t:tabla){	
+			System.out.println(t.columna+" ==> "+t.linea+" ==> "+t.consecuente);
+		}
+		
+	}
+	public void mostrarIniciales(NonTerminals nt){
+		for(Terminals t:iniciales(nt)){
+			System.out.print(t+"->");
+		}
+	}
+	public void mostrarIniciales(Terminals nt){
+		for(Terminals t:iniciales(nt)){
+			System.out.print(t+"->");
+		}
+	}
+	public void mostrarSeguidores(NonTerminals nt){
+		for(Terminals t:siguientes(nt)){
+			System.out.print(t+"->");
+		}
+	}
+	public void mostrarDirectores(Productions p){
+		for(Terminals t:directores(p))
+			System.out.println(t+" -> ");
+	}
+	public Grammar getGramatica(){
+		return super.g;
+	}
 }
