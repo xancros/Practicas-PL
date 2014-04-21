@@ -19,7 +19,7 @@ public abstract class AnalizadorSintactico {
 	protected abstract void generarGramatica();
 	protected boolean analizar() throws ErrorSintactico{
 		while(!entrada.isEmpty() && !inicio.isEmpty()){
-			if(inicio.peek() instanceof NonTerminals || firstElementIsNonTerminal()){
+			if(inicio.get(0) instanceof NonTerminals || firstElementIsNonTerminal()){
 				derivar();
 			}
 			if(primerElementoIgual()){

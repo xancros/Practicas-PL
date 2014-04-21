@@ -27,11 +27,17 @@ public class AnalizadorSintacticoLLgenerico extends AnalizadorSintactico{
 		}
 	}
 	private List<Tabla> tabla;
-	protected AnalizadorSintacticoLLgenerico(ArrayList<Vocabulary> input) {
+	protected AnalizadorSintacticoLLgenerico(ArrayList<Vocabulary> input) throws ErrorSintactico {
 		super(input);
+		super.inicio.add(1, g.getDolar());
 		rellenarTabla();
+		if(analizar())
+			System.out.println("Se ha reconocido la cadena");
+		else
+			System.err.println("Error al reconocer la cadena");
 		// TODO Auto-generated constructor stub
 	}
+	
 	
 	private void rellenarTabla(){
 		tabla = new LinkedList<Tabla>();
@@ -283,17 +289,36 @@ Collection<Vocabulary> cp9 = new LinkedList<Vocabulary>();
 	}
 	@Override
 	protected void derivar() throws ErrorSintactico {
+		boolean terminal=false;
+		int i=0;
 		// TODO Auto-generated method stub
+		while(!terminal){
 		//INICIO ES LA PILA DE LOS ELEMENTOS
 		//ENTRADA ES LA CADENA DE ENTRADA
-		Vocabulary in = inicio.pop();
+		
+		Vocabulary in = inicio.get(0);
 		Vocabulary en = entrada.get(0);
-		Collection<Vocabulary> produccionResultante=produccion(in,en);
-		if(produccionResultante==null){
-			throw new excepciones.ErrorSintactico();
+		if(!(in instanceof Terminals)){
+			Vocabulary a=inicio.remove(0);
+				Collection<Vocabulary> produccionResultante = produccion(in, en);
+				if (produccionResultante == null) {
+					throw new excepciones.ErrorSintactico();
+				}
+				if (!produccionResultante.contains(g.getLambda())) {
+					i = 0;
+					for (Vocabulary v : produccionResultante) {
+						if (v instanceof Terminals) {
+							terminal = true;
+						}
+						// inicio.add(v);
+						inicio.add(i, v);
+						i++;
+					}
+				}
+			}else{
+				terminal=true;
+			}
 		}
-		for(Vocabulary v:produccionResultante)
-			inicio.add(v);
 		/*
 		 * Vocabulary in = inicio.pop();
 			Productions p = g.buscarProduccion(entrada.get(0), in);
@@ -307,7 +332,11 @@ Collection<Vocabulary> cp9 = new LinkedList<Vocabulary>();
 private Collection<Vocabulary> produccion(Vocabulary p,Vocabulary en){
 		
 		for(Tabla t:tabla){
-			if(t.linea.getVocabulario().equals(p)&&t.columna.getVocabulario().equals(en)){
+			Vocabulary x=t.linea;
+			Vocabulary y=t.columna;
+			boolean lineaIgual=x.getVocabulario().equals(p.getVocabulario());
+			boolean columnaIgual=y.getVocabulario().equals(en.getVocabulario());
+			if(t.linea.getVocabulario().equals(p.getVocabulario())&&t.columna.getVocabulario().equals(en.getVocabulario())){
 				return t.consecuente.getConsecuente();
 			}
 		}

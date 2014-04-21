@@ -97,7 +97,7 @@ public class Grammar {
 	public static Terminals getLambda() {
 		return lambda;
 	}
-	public static Terminals getDolar() {
+	public Terminals getDolar() {
 		return dolar;
 	}
 
