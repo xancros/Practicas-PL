@@ -7,7 +7,7 @@ import java.util.Stack;
 import excepciones.ErrorSintactico;
 
 public abstract class AnalizadorSintactico {
-	protected Grammar g;
+	protected static Grammar g;
 	protected List<Vocabulary> entrada;
 	protected Stack<Vocabulary> inicio;
 	protected AnalizadorSintactico(ArrayList<Vocabulary> input){
@@ -16,8 +16,11 @@ public abstract class AnalizadorSintactico {
 		entrada=input;
 		inicio.add(g.getS());
 	}
+	public AnalizadorSintactico(){
+		
+	}
 	protected abstract void generarGramatica();
-	protected boolean analizar() throws ErrorSintactico{
+	public boolean analizar() throws ErrorSintactico{
 		while(!entrada.isEmpty() && !inicio.isEmpty()){
 			if(inicio.get(0) instanceof NonTerminals || firstElementIsNonTerminal()){
 				derivar();

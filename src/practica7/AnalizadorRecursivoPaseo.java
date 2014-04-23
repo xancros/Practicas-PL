@@ -1,19 +1,32 @@
 package practica7;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+
 import excepciones.ErrorSintactico;
 import base.*;
 public class AnalizadorRecursivoPaseo extends AnalizadorSintactico {
-
-	private AnalizadorLexico analizador = new AnalizadorLexico();
+	static Terminals casa;
+	static Terminals giro;
+	static Terminals id;
+	static Terminals pinta;
+	static Terminals avanza;
+	static Terminals dolar;
+	static Terminals lambda;
+	static Terminals n;
+	static Terminals igual;
+	 static AnalizadorLexico analizador = new AnalizadorLexico();
 	protected AnalizadorRecursivoPaseo(ArrayList<Vocabulary> input) {
 		super(input);
-		// TODO Auto-generated constructor stub
+		
+		
 	}
-
+	public AnalizadorRecursivoPaseo(){
+		
+	}
 	@Override
 	protected void generarGramatica() {
 		// TODO Auto-generated method stub
@@ -22,15 +35,15 @@ public class AnalizadorRecursivoPaseo extends AnalizadorSintactico {
 				NonTerminals P = new NonTerminals("PASO");
 				NonTerminals E = new NonTerminals("EXP");
 				
-				Terminals casa = new Terminals("casa");
-				Terminals giro = new Terminals("giro");
-				Terminals id = new Terminals("id");
-				Terminals pinta = new Terminals("pinta");
-				Terminals avanza = new Terminals("avanza");
-				Terminals dolar = new Terminals("$");
-				Terminals lambda = new Terminals("λ");
-				Terminals n = new Terminals("n");
-				Terminals igual = new Terminals("=");
+				casa = new Terminals("casa");
+				giro = new Terminals("giro");
+				id = new Terminals("id");
+				pinta = new Terminals("pinta");
+				avanza = new Terminals("avanza");
+				dolar = new Terminals("$");
+				lambda = new Terminals("λ");
+				n = new Terminals("n");
+				igual = new Terminals("=");
 				Collection<Vocabulary> cp1 = new LinkedList<Vocabulary>();
 				
 				cp1.add(P);
@@ -125,32 +138,119 @@ public class AnalizadorRecursivoPaseo extends AnalizadorSintactico {
 	}
 	public static void main(String[] args){
 		ArrayList<Vocabulary> l = new ArrayList<Vocabulary>();
+		
 		AnalizadorRecursivoPaseo a = new AnalizadorRecursivoPaseo(l);
-		a.m();
+		a.analizador= new AnalizadorLexico();
+		a.analizador.obtenerListaDeTokens("E:\\GitHub\\PracticasEDA\\Practicas-PL\\src\\p7\\movimientos.txt");
+		
+		a.analizador.imprimirListaTokens(a.analizador.listaDeTokens);
+analiza();//arranca el proceso de
+		
+		Ventana ventana = new Ventana("");
+		ventana.setVisible(true);
+		
+		//a.m();
 	}
-	protected boolean analizar(){
+	
+	protected static boolean analiza(){
 		try{
 			Paseo();
 			return true;
 		}catch(Exception e){
-			e.printStackTrace();
+			System.out.println("la cadena ha sido procesada y no hay mas elementos.");
 		}
 		return false;
 	}
-	void Paseo(){
-		
+	static void Paseo(){
+		String tok = analizador.tokenSiguiente().lexema;
+		if(esCasaGiroAvanzaPintaID(tok)){
+			Paso();
+			Paseo();
+		}
 	}
-	void Paso(){
-		
+	static void Paso(){
+		String tok = analizador.tokenActual().lexema;
+		if(esCasa(tok)){
+			Match(casa);
+		}
+		if (esGira(tok)){
+			Match(giro);
+			Exp();
+		}
+		if(esAvanza(tok)){
+			Match(avanza);
+			Exp();
+		}
+		if(esPinta(tok)){
+			Match(pinta);
+			Exp();
+		}
+		if(esID(tok)){
+			Match(id);
+			Exp();
+		}
 	}
-	void Exp(){
-		
+	static void Exp(){
+		try{
+			//String tokenAnterior=analizador.tokenActual();
+			String token=analizador.tokenSiguiente().lexema;
+			if(esID(token))
+				Match(id);
+			else if (esN(token))
+				Match(n);
+		}catch(Exception e){
+			
+		}
 	}
-	boolean esID(){
+	static boolean Match(Terminals t){
+		String tok=analizador.tokenActual().lexema;
+		return true;
+	}
+	static boolean esCasaGiroAvanzaPintaID(String tok){
+		if(esCasa(tok)||esPinta(tok)||esGira(tok)||esAvanza(tok)||esID(tok))
+			return true;
 		return false;
 	}
-	boolean Match(){
-		
+	static boolean esID(String lexToken){
+		//if(estaLexema(lexToken))
+		if(id.getVocabulario().equals(lexToken))
+			return true;
+		return false;
+	}
+	static boolean esN(String lexToken){
+		//if(estaLexema(lexToken))
+			Integer.parseInt(lexToken);
+		return true;
+	}
+	static boolean esCasa(String lexToken){
+		//if(estaLexema(lexToken))
+		if(casa.getVocabulario().equals(lexToken))
+			return true;
+		return false;
+	}
+	static boolean esPinta(String lexToken){
+		//if(estaLexema(lexToken))
+		if(pinta.getVocabulario().equals(lexToken))	
+			return true;
+		return false;
+	}
+	static boolean esGira(String lexToken){
+		//if(estaLexema(lexToken))
+			if(giro.getVocabulario().equals(lexToken))
+			return true;
+		return false;
+	}
+	static boolean esAvanza(String lexToken){
+		//if(estaLexema(lexToken))
+		if(avanza.getVocabulario().equals(lexToken))
+			return true;
+		return false;
+	}
+	
+	static boolean estaLexema(String lex){
+		for(Terminals t:g.getVt())
+			if(t.getVocabulario().equals(lex))
+				return true;
 		return false;
 	}
 }

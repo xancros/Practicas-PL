@@ -1,5 +1,5 @@
-num=3E20;
 do{
 	
    id = id + num;
+   num = num + 1 ;
   }while (id<num);

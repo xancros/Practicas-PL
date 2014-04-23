@@ -1,4 +1,4 @@
-package practica7;
+package P3;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -88,7 +89,14 @@ public class Analisis {
 			return tok;
 		}
 	}
-	protected Collection<Token>listaTokens;
+	
+	public int getFin() {
+		return fin;
+	}
+	public void setFin(int fin) {
+		this.fin = fin;
+	}
+	protected List<Token>listaTokens;
 	public Analisis (){
 		listaTokens=new LinkedList<Token>();
 		tokencitos=new LinkedList<String>();
@@ -112,7 +120,7 @@ public class Analisis {
 	public String getRuta() {
 		return ruta;
 	}
-	protected void preparacion(){
+	public void preparacion(){
 		try{
 			//ruta="E:\\GitHub\\PracticasEDA\\Practicas-PL\\src\\p7\\movimientos.txt";
 			archivo = new File(ruta);
@@ -120,6 +128,7 @@ public class Analisis {
 	         br = new BufferedReader(fr);
 	         cargarFichero();
 	         subBuffer1 = new StringBuffer(buffer);
+	         fin=subBuffer1.length();
 
 		
 		}catch(Exception e){
@@ -220,7 +229,7 @@ public class Analisis {
 		//System.out.println(tok);
 		return tok;
 	}
-	protected void analizador() throws IOException{
+	public void analizador() throws IOException{
 		int estado=0;
 		int valor=0;
 		int digito=0;
