@@ -8,7 +8,7 @@ import excepciones.ErrorSintactico;
 import base.*;
 public class AnalizadorRecursivoPaseo extends AnalizadorSintactico {
 
-	
+	private AnalizadorLexico analizador = new AnalizadorLexico();
 	protected AnalizadorRecursivoPaseo(ArrayList<Vocabulary> input) {
 		super(input);
 		// TODO Auto-generated constructor stub

@@ -35,10 +35,7 @@ public class Analisis {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		// TODO Apéndice de método generado automáticamente
-		Analisis a = new Analisis();
-	}
+	
 	private static Pattern N;
 	private static Pattern L;
 	private static Pattern del;
@@ -59,9 +56,42 @@ public class Analisis {
 	private String palabra;
 	private String val1=new String();
 	boolean memoria;
-	protected Collection<String>listaTokens;
+	char c;
+	private Collection<String> tokencitos;
+	String ruta="./src/practica3/datos.txt";
+	protected class Token{
+		protected String lexema;
+		protected String token;
+		Token(String lex,String tk){
+			lexema=lex;
+			token=tk;
+		}
+		
+		public String getLexema() {
+			return lexema;
+		}
+
+		public void setLexema(String lexema) {
+			this.lexema = lexema;
+		}
+
+		public String getToken() {
+			return token;
+		}
+
+		public void setToken(String token) {
+			this.token = token;
+		}
+
+		public String toString(){
+			String tok = ("<"+token+", "+lexema+">");
+			return tok;
+		}
+	}
+	protected Collection<Token>listaTokens;
 	public Analisis (){
-		listaTokens=new LinkedList<String>();
+		listaTokens=new LinkedList<Token>();
+		tokencitos=new LinkedList<String>();
 		L = Pattern.compile("[a-zA-Z]+");
 		N = Pattern.compile("[0-9]+");
 		del = Pattern.compile("\b|\t");
@@ -77,16 +107,23 @@ public class Analisis {
 		
 		//subBuffer1 = new StringBuffer(buffer.replaceAll("\\s","#"));
 		//fin = subBuffer1.length();
+		
+	}
+	public String getRuta() {
+		return ruta;
+	}
+	protected void preparacion(){
 		try{
-			archivo = new File("./src/practica3/datos.txt");
+			//ruta="E:\\GitHub\\PracticasEDA\\Practicas-PL\\src\\p7\\movimientos.txt";
+			archivo = new File(ruta);
 			fr = new FileReader (archivo);
 	         br = new BufferedReader(fr);
 	         cargarFichero();
 	         subBuffer1 = new StringBuffer(buffer);
 
-		analizador();
+		
 		}catch(Exception e){
-			
+			e.printStackTrace();
 		}finally{
 	         // En el finally cerramos el fichero, para asegurarnos
 	         // que se cierra tanto si todo va bien como si salta 
@@ -100,7 +137,9 @@ public class Analisis {
 	         }
 	      }
 	}
-	
+	public void setRuta(String ruta) {
+		this.ruta = ruta;
+	}
 	private void cargarFichero(){
 		String Caracter;
 	     String valor=" ";
@@ -168,21 +207,24 @@ public class Analisis {
 	}
 	private String daToken2(String tk, String lex){
 		String tok = ("<"+tk+", "+lex+">");
-		this.listaTokens.add(tok);
-		System.out.println(tok);
+		this.tokencitos.add(tok);
+		this.listaTokens.add(new Token(lex,tk));
+		//System.out.println(tok);
 		return tok;
 		
 	}
 	private String daToken1(String tk){
 		String tok = ("<"+tk+">");
-		this.listaTokens.add(tok);
-		System.out.println(tok);
+		this.tokencitos.add(tok);
+		this.listaTokens.add(new Token(String.valueOf(c),tk));
+		//System.out.println(tok);
 		return tok;
 	}
-	private void analizador() throws IOException{
+	protected void analizador() throws IOException{
 		int estado=0;
 		int valor=0;
 		int digito=0;
+		
 		boolean notacion=false;
 		palabra=new String();
 		String cadena;
@@ -216,9 +258,9 @@ public class Analisis {
 								estado =0;}break;
 					case ')': {daToken1 (TK_PAR_CER);
 								estado = 0;}break;
-					case '=' : estado = 7;break;
-					case '+' : estado = 8;break;
-					case '<' : estado = 10;break;
+					case '=' : {c='=';estado = 7;}break;
+					case '+' : {c='+';estado = 8;}break;
+					case '<' : {c='<';estado = 10;}break;
 					case '/' :{
 						
 						caracter = this.leerSiguienteCaracter();
@@ -455,7 +497,22 @@ public class Analisis {
 			}break;
 			}
 		}
-		System.out.println("NO HAY MAS CARACTERES");
+		//System.out.println("NO HAY MAS CARACTERES");
 	}
 	
+	public void imprimir(){
+		for(String t:tokencitos)
+			System.out.println(t);
+	}
+	public static void main(String[] args) {
+		// TODO Apéndice de método generado automáticamente
+		Analisis a = new Analisis();
+		a.preparacion();try {
+			a.analizador();
+			a.imprimir();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
