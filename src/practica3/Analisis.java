@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -56,12 +57,16 @@ public class Analisis {
     private FileReader fr = null;
     private BufferedReader br = null;
 	private String palabra;
+	private String val1=new String();
+	boolean memoria;
+	protected Collection<String>listaTokens;
 	public Analisis (){
+		listaTokens=new LinkedList<String>();
 		L = Pattern.compile("[a-zA-Z]+");
 		N = Pattern.compile("[0-9]+");
 		del = Pattern.compile("\b|\t");
 		del1 = Pattern.compile(del.pattern()+"|[(]|"+"|[{]|=|[+]|;|[)]|<|#");
-		del2 = Pattern.compile(del.pattern()+N.pattern()+"|"+L.pattern());
+		del2 = Pattern.compile(del.pattern()+"|"+N.pattern()+"|"+L.pattern());
 		palabrasReservadas = Pattern.compile("for|while|int|char|Integer|Character|float|Float|String|do|switch|case|if|else");
 		comentario = Pattern.compile("[//]|[/*]|[*/]");
 		//subBuffer1 = new StringBuffer("int casa;");
@@ -78,6 +83,7 @@ public class Analisis {
 	         br = new BufferedReader(fr);
 	         cargarFichero();
 	         subBuffer1 = new StringBuffer(buffer);
+
 		analizador();
 		}catch(Exception e){
 			
@@ -162,12 +168,14 @@ public class Analisis {
 	}
 	private String daToken2(String tk, String lex){
 		String tok = ("<"+tk+", "+lex+">");
+		this.listaTokens.add(tok);
 		System.out.println(tok);
 		return tok;
 		
 	}
 	private String daToken1(String tk){
 		String tok = ("<"+tk+">");
+		this.listaTokens.add(tok);
 		System.out.println(tok);
 		return tok;
 	}
@@ -175,6 +183,7 @@ public class Analisis {
 		int estado=0;
 		int valor=0;
 		int digito=0;
+		boolean notacion=false;
 		palabra=new String();
 		String cadena;
 		char caracter = 0;
@@ -185,6 +194,7 @@ public class Analisis {
 					iniLexema();
 					digito = 0;
 					valor = 0;
+					val1=" ";
 					caracter = this.leerSiguienteCaracter();
 					//Matcher mat = pat.matcher(cadena);
 					cadena = String.valueOf(caracter);
@@ -196,11 +206,16 @@ public class Analisis {
 					switch (caracter){
 					//case del: estado = 0;break;
 					//case 'L': estado = 1;break;
-					case '{': estado = 5;break;
-					case '}': estado = 6;break;
-					case ';': estado= 9;break;
-					case '(': estado = 14;break;
-					case ')': estado= 15;break;
+					case '{': {daToken1 (TK_LLAV_ABR);
+								estado = 0;}break;
+					case '}':{ daToken1 (TK_LLAV_CER);
+								estado =  0;}break;
+					case ';': {daToken1 (TK_FIN_SENT);
+								estado = 0;};break;
+					case '(': {daToken1 (TK_PAR_ABR);
+								estado =0;}break;
+					case ')': {daToken1 (TK_PAR_CER);
+								estado = 0;}break;
 					case '=' : estado = 7;break;
 					case '+' : estado = 8;break;
 					case '<' : estado = 10;break;
@@ -287,13 +302,9 @@ public class Analisis {
 				daToken2 (TK_ID, daLexema());
 				estado = 0;
 			}break;
-			case 5:{
-				daToken1 (TK_LLAV_ABR);
-				estado = 0;
-			}break;
+			
 			case 6:{
-				daToken1 (TK_LLAV_CER);
-				estado =  0;
+				
 			}break;
 			case 7:{
 				
@@ -302,6 +313,7 @@ public class Analisis {
 				matchDel2 = del2.matcher(cadena);
 				if (matchDel2.matches())
 					estado = 11;
+				
 				/*else{
 					this.daToken1(TK_ASIG);
 					estado = 0;
@@ -324,8 +336,7 @@ public class Analisis {
 				}*/
 			}break;
 			case 9:{
-				daToken1 (TK_FIN_SENT);
-				estado = 0;
+				
 			}break;
 			case 10:{
 				caracter = leerSiguienteCaracter();
@@ -355,12 +366,10 @@ public class Analisis {
 				estado = 0;
 			}break;
 			case 14:{
-				daToken1 (TK_PAR_ABR);
-				estado =0;
+				
 			}break;
 			case 15:{
-				daToken1 (TK_LLAV_CER);
-				estado = 0;
+				
 			}break;
 			case 16:{
 				digito = convierteNumero ( caracter );
@@ -371,12 +380,29 @@ public class Analisis {
 				matchNumber = N.matcher(cadena);
 				
 				matchDel1 = del1.matcher(cadena);
-				
+				if(notacion){
+					val1=val1+String.valueOf(valor)+caracter;
+					//estado=0;
+				}
 				//sentencia if-else
+				else
 				if (matchNumber.matches())
 					estado = 16;
 				else if (matchDel1.matches())
 					estado = 17;
+				else{
+					if (caracter=='E' || caracter=='e'){//exponenciales formatoxxxExxx
+						val1=val1+String.valueOf(valor)+caracter;
+						notacion=true;
+						memoria=true;
+						estado=18;
+					}else if(caracter=='.'|| caracter==','){
+						val1=val1+String.valueOf(valor)+caracter;
+						estado=19;
+					}
+						
+					
+				}
 				/*switch (caracter){
 				case 'N': estado = 16;break;
 				case del1: estado = 17;break;
@@ -388,6 +414,44 @@ public class Analisis {
 				this.delantero--;
 				daToken2 (TK_CTE_NUM, String.valueOf(valor));
 				estado = 0;
+			}break;
+			case 18:{
+				do{
+					valor=0;
+					caracter = leerSiguienteCaracter();
+					cadena = String.valueOf(caracter);
+					matchNumber = N.matcher(cadena);
+					
+					matchDel1 = del1.matcher(cadena);
+					if (matchNumber.matches()){
+						digito = convierteNumero ( caracter );
+						valor = valor * 10 + digito;
+						val1=val1+String.valueOf(valor);
+					}
+					valor=0;
+				}while(!matchDel1.matches());
+				daToken2("EXP_NUM_CIENTIFICA",val1);
+				//retrocesoPuntero();
+				estado=0;
+			}break;
+			case 19:{
+				valor=0;
+				do{
+					caracter = leerSiguienteCaracter();
+					cadena = String.valueOf(caracter);
+					matchNumber = N.matcher(cadena);
+					
+					matchDel1 = del1.matcher(cadena);
+					if (matchNumber.matches()){
+						digito = convierteNumero ( caracter );
+						valor = valor * 10 + digito;
+						val1=val1+String.valueOf(valor);
+					}
+					valor=0;
+				}while(!matchDel1.matches());
+				daToken2("EXP_NUM",val1);
+				//retrocesoPuntero();
+				estado=0;
 			}break;
 			}
 		}

@@ -1,4 +1,5 @@
-
+num=3E20;
 do{
+	
    id = id + num;
   }while (id<num);
