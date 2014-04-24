@@ -1,3 +1,3 @@
-avanza 10 
-giro 110 
-avanza 40
+AVANZA 10 
+GIRO 110 
+AVANZA 40

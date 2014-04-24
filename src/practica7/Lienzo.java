@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 import javax.swing.JPanel;
 
-
+import P3.Token;
 public class Lienzo extends JPanel {
 	/**
 	* Constructor for objects of class Lienzo
@@ -51,10 +51,10 @@ public class Lienzo extends JPanel {
 		
 		if(AnalizadorRecursivoPaseo.analiza()){
 			
-			ArrayList<Token> lista = analizadorSintactico.analizador.obtenerListaDeTokensCadena(cadenaAProcesar);
-			Iterator<Token> it = lista.iterator();
+			ArrayList<practica7.Token> lista = analizadorSintactico.analizador.obtenerListaDeTokensCadena(cadenaAProcesar);
+			Iterator<practica7.Token> it = lista.iterator();
 			while(it.hasNext()){//iteraremos la lista de tokens segun vengan y realizaremos el dibujado del camino
-				Token token = it.next();
+				practica7.Token token = it.next();
 				if(token.lexema.equals("avanza")){//avanzar
 					int numero = Integer.parseInt(it.next().lexema);
 					System.out.println("avanza: "+ numero);
@@ -70,6 +70,11 @@ public class Lienzo extends JPanel {
 				}
 			}
 		}
+	}
+	public void redraw(){
+		this.repaint();
+	}
+}
 		/*g.setColor(Color.red);
 		t=new Tortuga(g);
 		t.pen(false);
@@ -87,10 +92,4 @@ public class Lienzo extends JPanel {
 		t.turn(90);
 		t.move(50);
 		*/
-	}
 	
-	public void redraw(){
-		this.repaint();
-	}
-		
-}
