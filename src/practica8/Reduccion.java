@@ -14,9 +14,14 @@ public class Reduccion extends Operacion {
 	}
 
 	@Override
-	protected void accion(Stack<Vocabulary> pila, List<Productions> prod) {
+	protected int accion(Stack<Vocabulary> pila, List<Productions> prod,Vocabulary e) {
 		// TODO Auto-generated method stub
-		
+		for(Vocabulary p: prod.get(numero-1).getConsecuente()){
+			pila.pop();
+			pila.pop();
+		}
+		pila.push(prod.get(numero-1).getAntecedente());
+		return 2;
 	}
 
 }

@@ -10,5 +10,5 @@ public abstract class Operacion {
 		letra=l;
 		numero=n;
 	}
-	protected abstract void accion(Stack<Vocabulary> pila, List<Productions> prod);
+	protected abstract int accion(Stack<Vocabulary> pila, List<Productions> prod,Vocabulary e);
 }

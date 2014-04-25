@@ -5,13 +5,14 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 import excepciones.ErrorSintactico;
 import base.*;
 public class AnalizadorAscendenteLR extends AnalizadorSintactico {
-	protected List<Tabla> tabla;
-	protected List<Productions> producciones;
-	protected Grammar g=generarGramatica2();
+	protected ConfiguracionLR cfg;
+	
+	protected Grammar g;
 	protected List<Vocabulary> l;
 	public AnalizadorAscendenteLR(int i){
 		//super();
@@ -96,96 +97,60 @@ Collection<Vocabulary> cp5 = new LinkedList<Vocabulary>();
 		columnas.add(T);
 		columnas.add(F);
 		l=columnas;
-		producciones=new ArrayList<Productions>();
+		ArrayList<Productions> producciones=new ArrayList<Productions>();
 		producciones.add(p1);
 		producciones.add(p2);
 		producciones.add(p3);
 		producciones.add(p4);
 		producciones.add(p5);
 		producciones.add(p6);
-		generarTabla();
+		cfg=new ConfiguracionLR(producciones);
+		cfg.generarTabla(l);
 	return g;
 		
 		
 	}
-	
+	protected AnalizadorAscendenteLR (List<Vocabulary> input){
+		//super(input);
+		
+		g=generarGramatica2();
+		super.entrada=input;
+		inicio=new Stack<Vocabulary>();
+		super.inicio.add(g.getDolar());
+		super.inicio.add(new Vocabulary("0"));
+		
+		
+	}
 	@Override
 	protected void derivar() throws ErrorSintactico {
 		// TODO Auto-generated method stub
 		
 	}
-	private void generarTabla(){
-		tabla=new LinkedList<Tabla>();
-		//ESTADO 0
-		tabla.add(new Tabla(0,l.get(0),new Desplazamiento('D',5)));
-		tabla.add(new Tabla(0,l.get(3),new Desplazamiento('D',4)));
-		tabla.add(new Tabla(0,l.get(6),new Desplazamiento(null,1)));
-		tabla.add(new Tabla(0,l.get(7),new Desplazamiento(null,2)));
-		tabla.add(new Tabla(0,l.get(8),new Desplazamiento(null,3)));
-		//ESTADO 1
-		tabla.add(new Tabla(1,l.get(1),new Desplazamiento('D',6)));
-		tabla.add(new Tabla(1,l.get(5),new Desplazamiento(null,-1)));
-		//ESTADO 2
-		tabla.add(new Tabla(2,l.get(1),new Reduccion('R',2)));
-		tabla.add(new Tabla(2,l.get(2),new Desplazamiento('D',7)));
-		tabla.add(new Tabla(2,l.get(4),new Reduccion('R',2)));
-		tabla.add(new Tabla(2,l.get(5),new Reduccion('R',2)));
-		//ESTADO 3
-		tabla.add(new Tabla(3,l.get(1),new Reduccion('R',5)));
-		tabla.add(new Tabla(3,l.get(2),new Reduccion('R',5)));
-		tabla.add(new Tabla(3,l.get(4),new Reduccion('R',5)));
-		tabla.add(new Tabla(3,l.get(5),new Desplazamiento(null,4)));
-		//ESTADO 4
-		tabla.add(new Tabla(3,l.get(0),new Desplazamiento('D',5)));
-		tabla.add(new Tabla(3,l.get(3),new Desplazamiento('D',4)));
-		tabla.add(new Tabla(3,l.get(6),new Desplazamiento(null,8)));
-		tabla.add(new Tabla(3,l.get(7),new Desplazamiento(null,2)));
-		tabla.add(new Tabla(3,l.get(8),new Desplazamiento(null,3)));
-		//ESTADO 5
-		tabla.add(new Tabla(5,l.get(1),new Reduccion('R',6)));
-		tabla.add(new Tabla(5,l.get(2),new Reduccion('R',6)));
-		tabla.add(new Tabla(5,l.get(4),new Reduccion('R',6)));
-		tabla.add(new Tabla(5,l.get(5),new Reduccion('R',6)));
-		//ESTADO 6
-		tabla.add(new Tabla(6,l.get(0),new Desplazamiento('D',5)));
-		tabla.add(new Tabla(6,l.get(3),new Desplazamiento('D',4)));
-		tabla.add(new Tabla(6,l.get(7),new Desplazamiento(null,9)));
-		tabla.add(new Tabla(6,l.get(8),new Desplazamiento(null,3)));
-		//ESTADO 7
-		tabla.add(new Tabla(7,l.get(0),new Desplazamiento('D',5)));
-		tabla.add(new Tabla(7,l.get(3),new Desplazamiento('D',4)));
-		tabla.add(new Tabla(7,l.get(8),new Desplazamiento(null,10)));
-		//ESTADO 8
-		tabla.add(new Tabla(8,l.get(1),new Desplazamiento('D',6)));
-		tabla.add(new Tabla(8,l.get(4),new Desplazamiento('D',11)));
-		//ESTADO 9
-		tabla.add(new Tabla(9,l.get(1),new Reduccion('R',1)));
-		tabla.add(new Tabla(9,l.get(2),new Desplazamiento('D',7)));
-		tabla.add(new Tabla(9,l.get(4),new Reduccion('R',1)));
-		tabla.add(new Tabla(9,l.get(5),new Reduccion('R',1)));
-		//ESTADO 10
-		tabla.add(new Tabla(10,l.get(1),new Reduccion('R',3)));
-		tabla.add(new Tabla(10,l.get(2),new Reduccion('R',3)));
-		tabla.add(new Tabla(10,l.get(4),new Reduccion('R',3)));
-		tabla.add(new Tabla(10,l.get(5),new Reduccion('R',3)));
-		//ESTADO 11
-		tabla.add(new Tabla(11,l.get(1),new Reduccion('R',5)));
-		tabla.add(new Tabla(11,l.get(2),new Reduccion('R',5)));
-		tabla.add(new Tabla(11,l.get(4),new Reduccion('R',5)));
-		tabla.add(new Tabla(11,l.get(5),new Reduccion('R',5)));
-		
-		
-		
-		
-	}
+	
 	@Override
 	public boolean analizar(){
-		
-		
+		while(entrada.size()>0){
+			int accion = cfg.analisisDecision(entrada.get(0), inicio);
+			switch (accion) {
+			case 0: {
+				entrada.remove(0);
+			}
+				break;
+			case 2: {
+				cfg.analisisDecision(inicio.get(inicio.size()-1), inicio);
+			}break;
+			case -2: {
+				System.out.println("Cadena reconocida");
+				return true;
+			}
+			
+			}
+		}
 		return false;
 	}
+	
 	public void m(){
-		for(Productions p:producciones){
+		for(Productions p:cfg.producciones){
 			
 			System.out.println(p.toString());
 		}
@@ -195,7 +160,7 @@ Collection<Vocabulary> cp5 = new LinkedList<Vocabulary>();
 			System.out.println(p.toString());
 		}
 		System.out.println("..............................");
-		for(Tabla t:tabla){
+		for(Tabla t:cfg.tabla){
 			System.out.print(t.fila+"->"+t.columna+"->");
 			if(t.op.letra!=null)
 				System.out.print(t.op.letra+"");
@@ -204,8 +169,26 @@ Collection<Vocabulary> cp5 = new LinkedList<Vocabulary>();
 			
 	}
 	public static void main(String args[]){
-		AnalizadorAscendenteLR a = new AnalizadorAscendenteLR(2);
-		a.m();
+		ArrayList<Vocabulary> l = new ArrayList<Vocabulary>();
+		l.add(new Vocabulary("id"));
+		l.add(new Vocabulary("+"));
+		l.add(new Vocabulary("id"));
+		l.add(new Vocabulary("*"));
+		l.add(new Vocabulary("("));
+		l.add(new Vocabulary("id"));
+		l.add(new Vocabulary("+"));
+		l.add(new Vocabulary("id"));
+		l.add(new Vocabulary(")"));
+		l.add(new Vocabulary("$"));
+		
+		AnalizadorAscendenteLR a = new AnalizadorAscendenteLR(l);
+		a.analizar();
+		/*Stack<String> s = new Stack<String>();
+		s.push("G");
+		s.push("S");
+		System.out.println(s.peek());
+		System.out.println(s.get(s.size()-1)+" "+s.get(s.size()-2));*/
+		//a.m();
 	}
 	@Override
 	protected void generarGramatica() {
