@@ -8,13 +8,13 @@ import base.Vocabulary;
 
 public class Reduccion extends Operacion {
 
-	protected Reduccion(char l, int n) {
+	public Reduccion(char l, int n) {
 		super(l, n);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	protected int accion(Stack<Vocabulary> pila, List<Productions> prod,Vocabulary e) {
+	public int accion(Stack<Vocabulary> pila, List<Productions> prod,Vocabulary e) {
 		// TODO Auto-generated method stub
 		for(Vocabulary p: prod.get(numero-1).getConsecuente()){
 			pila.pop();

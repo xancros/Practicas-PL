@@ -9,9 +9,20 @@ public class Grammar {
 	private Collection<Terminals> vt;
 	private Collection<Productions> p;
 	private NonTerminals s;
-	private final static Terminals lambda=new Terminals("λ");
-	private final static Terminals dolar=new Terminals("$");
+	private final Terminals lambda=new Terminals("λ");
+	private final  Terminals dolar=new Terminals("$");
+	private final  Terminals punto=new Terminals(".");
+	private NonTerminals s2;
 	
+	public NonTerminals getS2() {
+		return s2;
+	}
+	public void setS2(NonTerminals s2) {
+		this.s2 = s2;
+	}
+	public Terminals getPunto() {
+		return punto;
+	}
 	public Grammar(Collection<NonTerminals> vn, Collection<Terminals> vt,
 			Collection<Productions> p, NonTerminals s) {
 		super();
@@ -94,7 +105,7 @@ public class Grammar {
 
 		return s;
 	}
-	public static Terminals getLambda() {
+	public  Terminals getLambda() {
 		return lambda;
 	}
 	public Terminals getDolar() {

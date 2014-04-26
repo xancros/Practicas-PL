@@ -4,11 +4,11 @@ import base.Productions;
 import base.Vocabulary;
 import java.util.List;
 public abstract class Operacion {
-	Character letra;
-	int numero;
+	public Character letra;
+	public int numero;
 	protected Operacion(Character l,int n){
 		letra=l;
 		numero=n;
 	}
-	protected abstract int accion(Stack<Vocabulary> pila, List<Productions> prod,Vocabulary e);
+	public abstract int accion(Stack<Vocabulary> pila, List<Productions> prod,Vocabulary e);
 }

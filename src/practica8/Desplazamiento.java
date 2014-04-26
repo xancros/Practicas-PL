@@ -10,13 +10,13 @@ import base.Vocabulary;
 
 public class Desplazamiento extends Operacion {
 
-	protected Desplazamiento(Character l, int n) {
+	public Desplazamiento(Character l, int n) {
 		super(l, n);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	protected int accion(Stack<Vocabulary> pila, List<Productions> prod,Vocabulary e) {
+	public int accion(Stack<Vocabulary> pila, List<Productions> prod,Vocabulary e) {
 		// TODO Auto-generated method stub
 		
 		if(letra!=null){
