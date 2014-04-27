@@ -6,11 +6,12 @@ import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 import practica8.Desplazamiento;
 import practica8.Operacion;
 import practica8.Reduccion;
-import P1.P;
+
 import base.Grammar;
 import base.NonTerminals;
 import base.Productions;
@@ -22,9 +23,10 @@ public class ConfiguracionLR {
 	protected ArrayList<Vocabulary> conjuntoTVT;
 	
 	protected Operacion[][] Tabla;
-	public ConfiguracionLR(Grammar g,ArrayList<Vocabulary> c){
+	protected List<Productions> prod;
+	public ConfiguracionLR(ArrayList<Productions> prods,ArrayList<Vocabulary> c){
 		//G=g;
-		//conjuntoTVT=c;
+		conjuntoTVT=c;
 		NonTerminals E = new NonTerminals("E");
 		NonTerminals T = new NonTerminals("T");
 		NonTerminals F = new NonTerminals("F");
@@ -38,7 +40,7 @@ public class ConfiguracionLR {
 		Terminals dolar = new Terminals("$");
 		Terminals lambda = new Terminals("λ");
 		Terminals punto = new Terminals(".");
-		conjuntoTVT = new ArrayList<Vocabulary>();
+		/*conjuntoTVT = new ArrayList<Vocabulary>();
 		conjuntoTVT.add(E);
 		conjuntoTVT.add(T);
 		conjuntoTVT.add(F);
@@ -47,7 +49,7 @@ public class ConfiguracionLR {
 		conjuntoTVT.add(por);
 		conjuntoTVT.add(dolar);
 		conjuntoTVT.add(abierto);
-		conjuntoTVT.add(cerrado);
+		conjuntoTVT.add(cerrado);*/
 		
 		Collection<Vocabulary> cp0 = new ArrayList<Vocabulary>();
 		cp0.add(E);
@@ -110,11 +112,12 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 		G=gr;
 		Tabla=generarTabla(gr);
 		imprimirTabla(Tabla);
-	}
+		prod=prods;
+	}/*
 	public static void main(String[] args){
 		
 		ConfiguracionLR c = new ConfiguracionLR(null,null);
-	}
+	}*/
 	private void imprimirTabla(Operacion[][] tabla){
 		System.out.print("\t");
 		for(int i=0;i<conjuntoTVT.size();i++){
@@ -173,7 +176,7 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 				 if(this.puntoAlFinal(item)){
 					 if(item.getAntecedente().getVocabulario().equals(G2.getS().getVocabulario())){
 						 int indiceV = conjuntoTVT.indexOf(G.getDolar());
-						 op = new Desplazamiento(null,-1);
+						 op = new Desplazamiento('A',-1);
 						 tabla[Nestado][indiceV]=op;
 					 }else{
 						 Collection<Terminals> col = siguientes(G2,item.getAntecedente());
@@ -519,5 +522,26 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 		
 	}
 
-
+	protected int analisisDecision(Vocabulary elem,Stack<Vocabulary> pila){
+		int estado;
+		if(elem instanceof NonTerminals)
+			estado=Integer.parseInt(pila.get(pila.size()-2).getVocabulario());
+		else
+			estado = Integer.parseInt(pila.peek().getVocabulario());
+		
+		 int columna=0;
+		 for(Vocabulary c:conjuntoTVT)
+			 if(c.getVocabulario().equals(elem.getVocabulario())){
+				 columna=conjuntoTVT.indexOf(c);
+				 break;
+			 }
+		 return Tabla[estado][columna].accion(pila, prod, elem);
+		/*for(Tabla t:tabla){
+			if(t.fila==e && t.columna.getVocabulario().equals(elem.getVocabulario())){
+				
+				return t.op.accion(pila, producciones, elem);
+			}
+		}*/
+		//return -5;
+	}
 }

@@ -19,13 +19,14 @@ public class AnalizadorSintacticoAscendente extends AnalizadorAscendenteLR {
 		super(input);
 		// TODO Auto-generated constructor stub
 	}
+	protected ConfiguracionLR cfg;
 	@Override
 	protected void generarGramatica() {
 		// TODO Auto-generated method stub
 		NonTerminals E = new NonTerminals("E");
 		NonTerminals T = new NonTerminals("T");
 		NonTerminals F = new NonTerminals("F");
-		
+		NonTerminals E2 = new NonTerminals("E'");
 		
 		Terminals mas = new Terminals("+");
 		Terminals por = new Terminals("*");
@@ -34,8 +35,17 @@ public class AnalizadorSintacticoAscendente extends AnalizadorAscendenteLR {
 		Terminals cerrado = new Terminals(")");
 		Terminals dolar = new Terminals("$");
 		Terminals lambda = new Terminals("λ");
-		Terminals punto = new Terminals(" ");
-		
+		Terminals punto = new Terminals(".");
+		ArrayList<Vocabulary>conjuntoTVT = new ArrayList<Vocabulary>();
+		conjuntoTVT.add(E);
+		conjuntoTVT.add(T);
+		conjuntoTVT.add(F);
+		conjuntoTVT.add(id);
+		conjuntoTVT.add(mas);
+		conjuntoTVT.add(por);
+		conjuntoTVT.add(dolar);
+		conjuntoTVT.add(abierto);
+		conjuntoTVT.add(cerrado);
 		Collection<Vocabulary> cp1 = new LinkedList<Vocabulary>();
 		
 		cp1.add(E);
@@ -107,21 +117,58 @@ Collection<Vocabulary> cp5 = new LinkedList<Vocabulary>();
 		producciones.add(p4);
 		producciones.add(p5);
 		producciones.add(p6);
+		cfg=new ConfiguracionLR(producciones,conjuntoTVT);
 	
 	}
 	protected AnalizadorSintacticoAscendente(int i){
 		super(i);
 		
 	}
+	
+	
+	public boolean analizar(){
+		while(entrada.size()>0){
+			int accion = cfg.analisisDecision(entrada.get(0), inicio);
+			switch (accion) {
+			case 0: {
+				entrada.remove(0);
+			}
+				break;
+			case 2: {
+				cfg.analisisDecision(inicio.get(inicio.size()-1), inicio);
+			}break;
+			case -2: {
+				System.out.println("Cadena reconocida");
+				return true;
+			}
+			
+			}
+		}
+		return false;
+	}
+	
+	
 	public static void main(String args[]){
-		AnalizadorSintacticoAscendente a = new AnalizadorSintacticoAscendente(2);
+		ArrayList<Vocabulary> l = new ArrayList<Vocabulary>();
+		l.add(new Vocabulary("id"));
+		l.add(new Vocabulary("+"));
+		l.add(new Vocabulary("id"));
+		l.add(new Vocabulary("*"));
+		l.add(new Vocabulary("("));
+		l.add(new Vocabulary("id"));
+		l.add(new Vocabulary("+"));
+		l.add(new Vocabulary("id"));
+		l.add(new Vocabulary(")"));
+		l.add(new Vocabulary("$"));
+		AnalizadorSintacticoAscendente a = new AnalizadorSintacticoAscendente(l);
 		a.generarGramatica();
-		ArrayList<Productions> p =(ArrayList<Productions>) a.g.getP();
+		a.analizar();
+		/*ArrayList<Productions> p =(ArrayList<Productions>) a.g.getP();
 		for(Productions pd:p){
 			System.out.println(pd.toString());
 			LinkedList<Vocabulary> con =(LinkedList<Vocabulary>) pd.getConsecuente();
 			System.out.println(con.get(0));
-		}
+		}*/
 			
 	}
 }
