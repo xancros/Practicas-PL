@@ -13,6 +13,9 @@ public class Productions {
 		antecedente= new NonTerminals(ant);
 		consecuente=con;
 	}
+	public Productions (){
+		
+	}
 	/*public Vocabulary dameConsecuente(){
 		String c = new String();
 		for(Vocabulary v:this.getConsecuente()){

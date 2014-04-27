@@ -42,11 +42,11 @@ public class ConfiguracionLR {
 		conjuntoTVT.add(E);
 		conjuntoTVT.add(T);
 		conjuntoTVT.add(F);
-		conjuntoTVT.add(abierto);
+		conjuntoTVT.add(id);
 		conjuntoTVT.add(mas);
 		conjuntoTVT.add(por);
 		conjuntoTVT.add(dolar);
-		conjuntoTVT.add(id);
+		conjuntoTVT.add(abierto);
 		conjuntoTVT.add(cerrado);
 		
 		Collection<Vocabulary> cp0 = new ArrayList<Vocabulary>();
@@ -487,13 +487,13 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 					boolean iguales=false;
 					ArrayList<Vocabulary> listaConj=(ArrayList<Vocabulary>) x.getConsecuente();
 					ArrayList<Vocabulary> listaProduccion=(ArrayList<Vocabulary>) h.getConsecuente();
-					for(int i=0;i<listaConj.size();i++){
-						if( listaConj.get( i ).getVocabulario().equals( listaProduccion.get( i ).getVocabulario() ) )
-							iguales=true;
-						else
-							iguales=false;
+					int i=0;
+					for(i=0;i<listaConj.size();i++){
+						if(! listaConj.get( i ).getVocabulario().equals( listaProduccion.get( i ).getVocabulario() ) )
+							break;
+						
 					}
-					if(iguales)
+					if(i==h.getConsecuente().size())
 						return true;
 						
 				}
@@ -518,4 +518,6 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 		return lista.get(indicePunto+1);
 		
 	}
+
+
 }
