@@ -10,6 +10,7 @@ import java.util.Set;
 import practica8.Desplazamiento;
 import practica8.Operacion;
 import practica8.Reduccion;
+import P1.P;
 import base.Grammar;
 import base.NonTerminals;
 import base.Productions;
@@ -41,11 +42,11 @@ public class ConfiguracionLR {
 		conjuntoTVT.add(E);
 		conjuntoTVT.add(T);
 		conjuntoTVT.add(F);
-		conjuntoTVT.add(id);
+		conjuntoTVT.add(abierto);
 		conjuntoTVT.add(mas);
 		conjuntoTVT.add(por);
 		conjuntoTVT.add(dolar);
-		conjuntoTVT.add(abierto);
+		conjuntoTVT.add(id);
 		conjuntoTVT.add(cerrado);
 		
 		Collection<Vocabulary> cp0 = new ArrayList<Vocabulary>();
@@ -281,7 +282,7 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 	}
 	
 	private int orden(Collection<Collection<Productions>> lista,Collection<Productions> ir){
-		
+		/*
 		int i=0;
 		for(Collection<Productions> l:lista){
 			for(Productions p:ir)
@@ -291,6 +292,50 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 		}
 			
 		
+		return -1;*/
+		ArrayList<Vocabulary> cons = new ArrayList<Vocabulary>();
+		ArrayList<Vocabulary> cons2 = new ArrayList<Vocabulary>();
+		ArrayList<Productions> l2 = new ArrayList<Productions>();
+		for(Productions p : ir){l2.add(p);}
+		
+		int orden=-1;
+		for(Collection<Productions> c:lista){//ir conparando los collecciones de la lista con el colecction a comparar
+			orden++;
+			ArrayList<Productions> l1 = new ArrayList<Productions>();
+			for(Productions p : c){l1.add(p);}
+			
+			
+			
+			if(c.size()==ir.size()){
+				int i=0;
+				for(i=0;i<l1.size();i++){
+					if(l1.get(i).getAntecedente().getVocabulario().equals(l2.get(i).getAntecedente().getVocabulario())){
+						//si antecedente son iguales miramos los consecuentes
+						cons=(ArrayList<Vocabulary>)l1.get(i).getConsecuente();
+						cons2=(ArrayList<Vocabulary>)l2.get(i).getConsecuente();
+						if(cons.size()==cons2.size()){//si la longitud de los consecuentes son iguales
+							for(int m=0;m<cons.size();m++){
+								if(cons.get(m).getVocabulario().equals(cons2.get(m).getVocabulario())){
+									
+								}else{
+									//return -1;//si falla la comparacion de un solo V del consecuente
+								}
+							}
+						}else{
+							break;
+						}
+					}else{
+						break;//uno de los antecedentes no concuerdan
+					}
+				}
+				if(i==l1.size()){
+					return orden;
+				}
+				//return false;//el conjunto de items ya existia
+			}else{
+				//teinen distintas longitudes
+			}
+		}
 		return -1;
 	}
 
@@ -325,12 +370,49 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 	}
 	
 	private boolean contiene(Collection<Collection<Productions>> estados,Collection<Productions> ir){
-		
-			for(Collection<Productions>subEstado:estados)
+		for(Collection<Productions> c:estados){//ir conparando los collecciones de la lista con el colecction a comparar
+			ArrayList<Productions> l1 = new ArrayList<Productions>();
+			for(Productions p : c){l1.add(p);}
+			ArrayList<Productions> l2 = new ArrayList<Productions>();
+			for(Productions p : ir){l2.add(p);}
+			
+			ArrayList<Vocabulary> cons;
+			ArrayList<Vocabulary> cons2;
+			if(c.size()==ir.size()){
+				int i=0;
+				for(i=0;i<l1.size();i++){
+					if(l1.get(i).getAntecedente().getVocabulario().equals(l2.get(i).getAntecedente().getVocabulario())){//si antecedente son iguales miramos los consecuentes
+						if(l1.get(i).getConsecuente().size()==l2.get(i).getConsecuente().size()){//si la longitud de los consecuentes son iguales
+							for(int m=0;m<l1.get(i).getConsecuente().size();m++){
+								cons=(ArrayList<Vocabulary>)l1.get(i).getConsecuente();
+								cons2=(ArrayList<Vocabulary>)l2.get(i).getConsecuente();
+								if(cons.get(m).getVocabulario().equals(cons2.get(m).getVocabulario())){
+									
+								}else{
+									return false;//si falla la comparacion de un solo V del consecuente
+								}
+							}
+						}else{
+							break;
+						}
+					}else{
+						break;//uno de los antecedentes no concuerdan
+					}
+				}
+				if(i==l1.size()){
+					return true;
+				}
+				//return false;//el conjunto de items ya existia
+			}else{
+				//teinen distintas longitudes
+			}
+		}
+		return false;
+			/*for(Collection<Productions>subEstado:estados)
 					for(Productions p:ir)
 						if(contiene(subEstado,p))
 							return true;
-		return false;
+		return false;*/
 	}
 	
 	
@@ -379,7 +461,7 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 		while(!cambia){
 			subConjunto=new ArrayList<Productions>();
 			size=Cierre.size();
-			for(Productions item:I){
+			for(Productions item:Cierre){
 				if(!puntoAlFinal(item)){
 					Vocabulary v = dameSiguienteDelPunto(item);
 					for(Productions p: G2.getP())
