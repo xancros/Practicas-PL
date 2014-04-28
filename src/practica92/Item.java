@@ -10,12 +10,21 @@ import base.Productions;
 import base.Terminals;
 
 public class Item {
-	Productions p;
-	Collection<Terminals> simbolosAnticipacion;
+	public Productions p;
+	public Collection<Terminals> simbolosAnticipacion;
 	
-	Item(){
+	public Item(){
 		p=new Productions();
 		simbolosAnticipacion=new ArrayList<Terminals>();
 		
+	}
+	public String toString(){
+		String l = new String();
+		for(Terminals a:simbolosAnticipacion){
+			l+=a.toString();
+		}
+		l+="\n";
+		l+=p.toString();
+		return l;
 	}
 }

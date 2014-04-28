@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -11,6 +12,7 @@ import java.util.Stack;
 import practica8.Desplazamiento;
 import practica8.Operacion;
 import practica8.Reduccion;
+
 
 import base.Grammar;
 import base.NonTerminals;
@@ -24,92 +26,111 @@ public class ConfiguracionLR {
 	
 	protected Operacion[][] Tabla;
 	protected List<Productions> prod;
-	public ConfiguracionLR(ArrayList<Productions> prods,ArrayList<Vocabulary> c){
+	public ConfiguracionLR(ArrayList<Productions> prods,ArrayList<Vocabulary> h){
 		//G=g;
-		conjuntoTVT=c;
-		NonTerminals E = new NonTerminals("E");
-		NonTerminals T = new NonTerminals("T");
-		NonTerminals F = new NonTerminals("F");
-		NonTerminals E2 = new NonTerminals("E'");
+		//conjuntoTVT=c;
+		NonTerminals S = new NonTerminals("S");
+		NonTerminals C = new NonTerminals("C");
+		//NonTerminals F = new NonTerminals("F");
+		NonTerminals S2 = new NonTerminals("S'");
 		
-		Terminals mas = new Terminals("+");
-		Terminals por = new Terminals("*");
-		Terminals id = new Terminals("id");
-		Terminals abierto = new Terminals("(");
-		Terminals cerrado = new Terminals(")");
+		Terminals c = new Terminals("c");
+		Terminals d = new Terminals("d");
+		//Terminals id = new Terminals("id");
+		//Terminals abierto = new Terminals("(");
+		//Terminals cerrado = new Terminals(")");
 		Terminals dolar = new Terminals("$");
 		Terminals lambda = new Terminals("λ");
 		Terminals punto = new Terminals(".");
-		/*conjuntoTVT = new ArrayList<Vocabulary>();
-		conjuntoTVT.add(E);
-		conjuntoTVT.add(T);
-		conjuntoTVT.add(F);
-		conjuntoTVT.add(id);
-		conjuntoTVT.add(mas);
-		conjuntoTVT.add(por);
+		conjuntoTVT = new ArrayList<Vocabulary>();
+		conjuntoTVT.add(c);
+		conjuntoTVT.add(d);
+		//conjuntoTVT.add(F);
+		//conjuntoTVT.add(id);
+		conjuntoTVT.add(S);
+		conjuntoTVT.add(C);
 		conjuntoTVT.add(dolar);
-		conjuntoTVT.add(abierto);
-		conjuntoTVT.add(cerrado);*/
+		//conjuntoTVT.add(abierto);
+	//	conjuntoTVT.add(cerrado);
 		
 		Collection<Vocabulary> cp0 = new ArrayList<Vocabulary>();
-		cp0.add(E);
-		Productions p0 = new Productions("E'",cp0);
-		Collection<Vocabulary> cp1 = new ArrayList<Vocabulary>();
+		cp0.add(S);
+		Productions p0 = new Productions("S'",cp0);
+Collection<Vocabulary> cp1 = new ArrayList<Vocabulary>();
 		
-		cp1.add(E);
-		cp1.add(mas);
-		cp1.add(T);
-		Productions p1 = new Productions("E",cp1);
+		//cp1.add(E);
+		cp1.add(C);
+		cp1.add(C);
+		Productions p1 = new Productions("S",cp1);
 		
-		Collection<Vocabulary> cp2 = new ArrayList<Vocabulary>();
-		cp2.add(T);
-		Productions p2 = new Productions("E",cp2);
+		//Collection<Vocabulary> cp2 = new ArrayList<Vocabulary>();
+		//cp2.add(T);
+		//Productions p2 = new Productions("E",cp2);
 		Collection<Vocabulary> cp3 = new ArrayList<Vocabulary>();
 		
-		cp3.add(T);
-		cp3.add(por);
-		cp3.add(F);
-		Productions p3 = new Productions("T",cp3);
+		//cp3.add(T);
+		cp3.add(c);
+		cp3.add(C);
+		Productions p3 = new Productions("C",cp3);
 		
-		Collection<Vocabulary> cp4 = new ArrayList<Vocabulary>();
-		cp4.add(F);
-		Productions p4 = new Productions("T",cp4);
+		//Collection<Vocabulary> cp4 = new ArrayList<Vocabulary>();
+		//cp4.add(F);
+		//Productions p4 = new Productions("T",cp4);
 Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 		
-		cp5.add(abierto);
-		cp5.add(E);
-		cp5.add(cerrado);
-		Productions p5 = new Productions("F",cp5);
+		//cp5.add(T);
+		cp5.add(d);
+		//cp5.add(cerrado);
+		Productions p5 = new Productions("C",cp5);
 		
-		Collection<Vocabulary> cp6 = new ArrayList<Vocabulary>();
-		cp6.add(id);
-		Productions p6 = new Productions("F",cp6);
+		//Collection<Vocabulary> cp6 = new ArrayList<Vocabulary>();
+		//cp6.add(id);
+		//Productions p6 = new Productions("F",cp6);
 		
-		Collection<NonTerminals> nt = new HashSet<NonTerminals>();
-		nt.add(E2);
+		/*Collection<NonTerminals> nt = new HashSet<NonTerminals>();
 		nt.add(E);
 		nt.add(T);
-		nt.add(F);
+		//nt.add(F);
 		
 		Collection<Terminals> t = new HashSet<Terminals>();
 		t.add(mas);
 		t.add(por);
-		t.add(id);
-		t.add(abierto);
-		t.add(cerrado);
+		//t.add(id);
+		//t.add(abierto);
+		//t.add(cerrado);*/
+		/*Collection<Productions> p = new ArrayList<Productions>();
+		p.add(p1);
+		//p.add(p2);
+		p.add(p3);
+		//p.add(p4);
+		p.add(p5);
+		//p.add(p6);*/
+		Collection<NonTerminals> nt = new HashSet<NonTerminals>();
+		nt.add(S2);
+		nt.add(S);
+		nt.add(C);
+		//nt.add(F);
+		
+		Collection<Terminals> t = new HashSet<Terminals>();
+		t.add(c);
+		t.add(d);
+		//t.add(id);
+		//t.add(abierto);
+		//t.add(cerrado);
 		Collection<Productions> p = new ArrayList<Productions>();
 		p.add(p0);
 		p.add(p1);
-		p.add(p2);
+		//p.add(p2);
 		p.add(p3);
-		p.add(p4);
+		//p.add(p4);
 		p.add(p5);
-		p.add(p6);
+		//p.add(p6);
 		
 		//System.out.println(p.toString());
-		Grammar gr = new Grammar(nt,t,p,E2);
-		
+		Grammar gr = new Grammar(nt,t,p,S);
+		gr.setS2(S2);
 		G=gr;
+		
 		Tabla=generarTabla(gr);
 		imprimirTabla(Tabla);
 		prod=prods;
@@ -118,6 +139,19 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 		
 		ConfiguracionLR c = new ConfiguracionLR(null,null);
 	}*/
+	private void imprimirEstados(Collection<Item> lista, int n){
+		System.out.println("-------------------------");
+		System.out.println("Estado "+n);
+		for(Item it:lista){
+			
+			System.out.print(it.p.getAntecedente().getVocabulario()+"->");
+			for(Vocabulary vp:it.p.getConsecuente())
+				System.out.print(vp.getVocabulario());
+			System.out.println();
+		}
+		System.out.println("\n------------------------");
+			
+	}
 	private void imprimirTabla(Operacion[][] tabla){
 		System.out.print("\t");
 		for(int i=0;i<conjuntoTVT.size();i++){
@@ -150,7 +184,7 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 		 cons.add(G2.getPunto());
 		 cons.add(G2.getS());
 		 
-		 Productions prd = new Productions(G2.getS().getVocabulario(),cons);
+		 Productions prd = new Productions(G2.getS2().getVocabulario(),cons);
 		 Item it = new Item();
 		 it.simbolosAnticipacion.add(G.getDolar());
 		 it.p=prd;
@@ -163,9 +197,10 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 		 int Nestado=-1;
 		 for(Collection<Item> estado:listaEstados){
 			 Nestado++;
+			 imprimirEstados(estado, Nestado);
 			 for(Item item: estado){
 				 if(puntoAlFinal(item.p)){
-					 if(item.p.getAntecedente().getVocabulario().equals(G2.getS().getVocabulario())){
+					 if(item.p.getAntecedente().getVocabulario().equals(G2.getS2().getVocabulario())){
 						 int indiceV = conjuntoTVT.indexOf(G.getDolar());
 						 op = new Desplazamiento('A',-1);
 						 tabla[Nestado][indiceV]=op;
@@ -179,6 +214,21 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 							 tabla[Nestado][indiceV]=op;
 						}
 					 }
+				 }else{
+					 
+					 Vocabulary v = this.dameSiguienteDelPunto(item.p);
+					 Collection<Item> ir = ir_a(G2,estado,v);
+					 int indiceV= conjuntoTVT.indexOf(v);
+					 int indice = this.orden(listaEstados, ir);
+					 
+						if (v instanceof Terminals) {
+							op = new Desplazamiento('D', indice);
+							tabla[Nestado][indiceV] = op;
+						} else {
+							op = new Desplazamiento(null, indice);
+							tabla[Nestado][indiceV] = op;
+						}
+					 
 				 }
 			 }
 			
@@ -237,7 +287,7 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 		return listaSiguientes;
 	}
 	private Collection<Terminals> iniciales(Grammar G2,Collection<Vocabulary> c){
-		Collection<Terminals> lista = new ArrayList<Terminals>();
+		/*Collection<Terminals> lista = new ArrayList<Terminals>();
 		for(Vocabulary v:c){
 			if(v instanceof Terminals){
 				lista.addAll(iniciales(G2,((Terminals)v)));
@@ -250,7 +300,23 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 			}
 		}
 		lista.add(G2.getLambda());
-		return lista;
+		return lista;*/
+		Collection<Terminals> ls = new ArrayList<Terminals>();
+		if(c.isEmpty()){
+			ls.add(G2.getLambda());
+			return ls;
+		}
+		for(Vocabulary v: c){
+			if(v instanceof Terminals){
+				ls.add((Terminals)v);
+				return ls;
+			}
+			if (v instanceof NonTerminals){
+				Collection<Terminals> ini = iniciales(G2, (NonTerminals)v);
+				ls.addAll(ini);
+			}
+		}
+		return ls;
 		
 	}
 	private Collection<Terminals> iniciales(Grammar G2,Terminals t){
@@ -261,11 +327,18 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 	
 	private Collection<Terminals> iniciales(Grammar G2,NonTerminals nt){
 		Set<Terminals> conjunto = new HashSet<Terminals>();
+		for(Productions p:G2.getP())
+			if(p.getAntecedente().getVocabulario().equals(nt.getVocabulario())){
+				conjunto.addAll(iniciales(G2,p.getConsecuente()));
+			}
+		return conjunto;
+		/*Set<Terminals> conjunto = new HashSet<Terminals>();
 		for(Productions p : dameProducciones(G2,nt)){
 			//System.out.println("Produccion: "+p.toString());
 			conjunto.addAll(iniciales(G2,p.getConsecuente()));
 		}
-		return conjunto;
+		return conjunto;*/
+		
 	}
 	private List<Productions> dameProducciones(Grammar G2,NonTerminals nt){
 		List<Productions> lista = new ArrayList<Productions>();
@@ -277,38 +350,28 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 		return lista;
 	}
 	
-	private int orden(Collection<Collection<Productions>> lista,Collection<Productions> ir){
-		/*
-		int i=0;
-		for(Collection<Productions> l:lista){
-			for(Productions p:ir)
-				if(contiene(l,p))
-					return i;
-			i++;
-		}
-			
+	private int orden(Collection<Collection<Item>> lista,Collection<Item> ir){
 		
-		return -1;*/
 		ArrayList<Vocabulary> cons = new ArrayList<Vocabulary>();
 		ArrayList<Vocabulary> cons2 = new ArrayList<Vocabulary>();
-		ArrayList<Productions> l2 = new ArrayList<Productions>();
-		for(Productions p : ir){l2.add(p);}
+		ArrayList<Item> l2 = new ArrayList<Item>();
+		for(Item p : ir){l2.add(p);}
 		
 		int orden=-1;
-		for(Collection<Productions> c:lista){//ir conparando los collecciones de la lista con el colecction a comparar
+		for(Collection<Item> c:lista){//ir conparando los collecciones de la lista con el colecction a comparar
 			orden++;
-			ArrayList<Productions> l1 = new ArrayList<Productions>();
-			for(Productions p : c){l1.add(p);}
+			ArrayList<Item> l1 = new ArrayList<Item>();
+			for(Item p : c){l1.add(p);}
 			
 			
 			
 			if(c.size()==ir.size()){
 				int i=0;
 				for(i=0;i<l1.size();i++){
-					if(l1.get(i).getAntecedente().getVocabulario().equals(l2.get(i).getAntecedente().getVocabulario())){
+					if(l1.get(i).p.getAntecedente().getVocabulario().equals(l2.get(i).p.getAntecedente().getVocabulario())){
 						//si antecedente son iguales miramos los consecuentes
-						cons=(ArrayList<Vocabulary>)l1.get(i).getConsecuente();
-						cons2=(ArrayList<Vocabulary>)l2.get(i).getConsecuente();
+						cons=(ArrayList<Vocabulary>)l1.get(i).p.getConsecuente();
+						cons2=(ArrayList<Vocabulary>)l2.get(i).p.getConsecuente();
 						if(cons.size()==cons2.size()){//si la longitud de los consecuentes son iguales
 							for(int m=0;m<cons.size();m++){
 								if(cons.get(m).getVocabulario().equals(cons2.get(m).getVocabulario())){
@@ -325,7 +388,24 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 					}
 				}
 				if(i==l1.size()){
-					return orden;
+					ArrayList<Terminals> simb1;
+					ArrayList<Terminals> simb2;
+					boolean salir=false;
+					for(i=0;i<l1.size() && !salir;i++ ){
+						simb1=(ArrayList<Terminals>) l1.get(i).simbolosAnticipacion;
+						simb2=(ArrayList<Terminals>) l2.get(i).simbolosAnticipacion;
+						if(simb1.size()!=simb2.size())
+							break;
+						for(int j=0;j<simb1.size();j++){
+							if(!simb1.get(j).getVocabulario().equals(simb2.get(j).getVocabulario())){
+								salir=true;
+								break;
+							}
+							
+						}
+					}
+					if(i==l1.size())
+						return orden;
 				}
 				//return false;//el conjunto de items ya existia
 			}else{
@@ -516,7 +596,9 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 	private ArrayList<Vocabulary> despuesDelPunto(Productions p){
 		ArrayList<Vocabulary> l = (ArrayList<Vocabulary>) p.getConsecuente();
 		int index = l.indexOf(G.getPunto());
-		return (ArrayList<Vocabulary>) l.subList(index+1, l.size()-1);
+		ArrayList<Vocabulary> sublista = new ArrayList<Vocabulary>();
+		sublista.addAll( l.subList(index+1, l.size()-1) );
+		return sublista; 
 	}
 	
 	private boolean contiene(Collection<Item>d,Productions h){
