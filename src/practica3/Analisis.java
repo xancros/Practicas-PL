@@ -482,6 +482,7 @@ public class Analisis {
 					valor=0;
 				}while(!matchDel1.matches());
 				daToken2("EXP_NUM_CIENTIFICA",val1);
+				notacion=false;
 				//retrocesoPuntero();
 				estado=0;
 			}break;
@@ -523,5 +524,6 @@ public class Analisis {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 }

@@ -1,5 +1,8 @@
+
 do{
-	
-   id = id + num;
-   num = num + 1 ;
+	num=3E2;
+   id=id+num;
+   /*Comentario
+   */
+   num=num+1;
   }while (id<num);
