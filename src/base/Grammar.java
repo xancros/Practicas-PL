@@ -1,5 +1,6 @@
 package base;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -13,6 +14,7 @@ public class Grammar {
 	private final  Terminals dolar=new Terminals("$");
 	private final  Terminals punto=new Terminals(".");
 	private NonTerminals s2;
+	public ArrayList<Vocabulary> conjuntoTNT = new ArrayList<Vocabulary>();
 	
 	public NonTerminals getS2() {
 		return s2;

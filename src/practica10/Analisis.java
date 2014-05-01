@@ -33,7 +33,7 @@ public class Analisis {
 	private static final String flecha = "->";
 	private static final String terminal = "terminal";
 	private static final String salto = "cr";
-	
+	private static int index=-1;
 	private int inicio,delantero,fin;
 	private StringBuffer subBuffer1; // actualmente lo usamos hay que usar otra cosa
 	private StringBuffer subBuffer2;
@@ -64,7 +64,7 @@ public class Analisis {
 	boolean memoria;
 	char c;
 	private Collection<String> tokencitos;
-	String ruta="./src/practica10/producciones.txt";
+	String ruta="./src/producciones.txt";
 	protected class Token{
 		protected String lexema;
 		protected String token;
@@ -312,7 +312,7 @@ public class Analisis {
 				caracter=this.leerSiguienteCaracter();
 				cadena = String.valueOf(caracter);
 				if(caracter=='>'){
-					this.daToken2(flecha, palabra);
+					this.daToken2(flecha, flecha);
 					estado=0;
 					break;
 				}
@@ -331,7 +331,23 @@ public class Analisis {
 		}
 		//System.out.println("NO HAY MAS CARACTERES");
 	}
+	public Token dameSiguiente() {
+		index++;//aumentar el valor statico para acceder al sigueinte la proxima vez
+		//Token t = listaDeTokens.get(proximoToken);//retornar el proximo token
+		return this.listaTokens.get(index);
+		//return t;
+	}
+	public Token siguienteToken() {
+		//;//aumentar el valor statico para acceder al sigueinte la proxima vez
+		//Token t = listaDeTokens.get(proximoToken+1);//retornar el proximo token
+		return listaTokens.get(index+1);
+		//return t;
+	}
 	
+	public Token tokenActual() {
+		return listaTokens.get(index);//retornar el proximo token
+		
+	}
 	public void imprimir(){
 		for(Token t:listaTokens)
 			System.out.print(t.token+",");

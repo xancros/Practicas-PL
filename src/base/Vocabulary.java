@@ -2,7 +2,7 @@ package base;
 
 public class Vocabulary {
 	private String vocabulario;
-	private Object s; 
+	public Object s; 
 	public Vocabulary (String v){
 		vocabulario=v;
 	}

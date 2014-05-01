@@ -522,7 +522,7 @@ Collection<Vocabulary> cp5 = new ArrayList<Vocabulary>();
 		
 	}
 
-	protected int analisisDecision(Vocabulary elem,Stack<Vocabulary> pila){
+	public int analisisDecision(Vocabulary elem,Stack<Vocabulary> pila){
 		int estado;
 		if(elem instanceof NonTerminals)
 			estado=Integer.parseInt(pila.get(pila.size()-2).getVocabulario());
